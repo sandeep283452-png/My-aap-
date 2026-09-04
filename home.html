@@ -157,17 +157,50 @@
 
     <div class="content-area">
         
+        <!-- === टास्क सेक्शन शुरू === -->
         <div id="tasks-section" class="tab-content active">
+            
+            <!-- पहला टास्क (हमेशा खुला) -->
             <div class="card">
-                <h3>📝 Get Your Daily Tasks</h3>
-                <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
-                    Click the button below to message me directly on WhatsApp. I will assign you your daily tasks there!
-                </p>
-                <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20my%20daily%20tasks!" class="action-btn" style="background-color: #25D366; text-align: center;" target="_blank">
-                    📲 Get Tasks on WhatsApp
+                <h3>📝 Daily Task 1</h3>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #f39c12; font-size: 16px;">💰 50 Coins</span></p>
+                <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20my%20Daily%20Task%201" class="action-btn" style="background-color: #25D366; text-align: center;" target="_blank">
+                    📲 Get Task on WhatsApp
                 </a>
             </div>
+
+            <!-- दूसरा टास्क (लॉक) -->
+            <div class="card" id="card-t2" style="opacity: 0.6; border: 2px dashed #ccc;">
+                <h3>🔒 Premium Task 1</h3>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #f39c12; font-size: 16px;">💰 250 Coins</span></p>
+                <button id="btn-t2" style="background: #e0e0e0; color: #888; padding: 12px 20px; border-radius: 10px; border: none; font-weight: bold; width: 100%; font-size: 16px;">🔒 5 दिन बाद खुलेगा</button>
+                <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20Premium%20Task%201" id="link-t2" class="action-btn" style="background-color: #25D366; text-align: center; display: none;" target="_blank">
+                    📲 Get Task on WhatsApp
+                </a>
+            </div>
+
+            <!-- तीसरा टास्क (लॉक) -->
+            <div class="card" id="card-t3" style="opacity: 0.6; border: 2px dashed #ccc;">
+                <h3>🔒 Premium Task 2</h3>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #f39c12; font-size: 16px;">💰 300 Coins</span></p>
+                <button id="btn-t3" style="background: #e0e0e0; color: #888; padding: 12px 20px; border-radius: 10px; border: none; font-weight: bold; width: 100%; font-size: 16px;">🔒 5 दिन बाद खुलेगा</button>
+                <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20Premium%20Task%202" id="link-t3" class="action-btn" style="background-color: #25D366; text-align: center; display: none;" target="_blank">
+                    📲 Get Task on WhatsApp
+                </a>
+            </div>
+
+            <!-- चौथा टास्क (लॉक) -->
+            <div class="card" id="card-t4" style="opacity: 0.6; border: 2px dashed #ccc;">
+                <h3>🔒 Mega Task</h3>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #f39c12; font-size: 16px;">💰 400 Coins</span></p>
+                <button id="btn-t4" style="background: #e0e0e0; color: #888; padding: 12px 20px; border-radius: 10px; border: none; font-weight: bold; width: 100%; font-size: 16px;">🔒 5 दिन बाद खुलेगा</button>
+                <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20Mega%20Task" id="link-t4" class="action-btn" style="background-color: #25D366; text-align: center; display: none;" target="_blank">
+                    📲 Get Task on WhatsApp
+                </a>
+            </div>
+
         </div>
+        <!-- === टास्क सेक्शन खत्म === -->
 
         <div id="wallet-section" class="tab-content">
             <div class="card">
@@ -218,21 +251,50 @@
 </div>
 
 <script>
+    // टैब स्विच करने का कोड
     function switchTab(tabName) {
-        // सभी टैब कंटेंट को छुपाएं
         document.getElementById('tasks-section').classList.remove('active');
         document.getElementById('wallet-section').classList.remove('active');
         document.getElementById('payment-section').classList.remove('active');
         
-        // सभी नेव बटन्स से एक्टिव क्लास हटाएं
         let navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => item.classList.remove('active'));
 
-        // जो टैब क्लिक हुआ है उसे दिखाएं
         document.getElementById(tabName + '-section').classList.add('active');
-        
-        // क्लिक किए गए नेव बटन को एक्टिव करें
         event.currentTarget.classList.add('active');
+    }
+
+    // 5 दिन के लॉक का जादुई सिस्टम
+    let startDate = localStorage.getItem("appStartDate");
+    if (!startDate) {
+        startDate = new Date().getTime(); 
+        localStorage.setItem("appStartDate", startDate);
+    }
+
+    let currentDate = new Date().getTime();
+    let daysPassed = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24));
+
+    if (daysPassed >= 5) {
+        // टास्क 2 खोलें
+        document.getElementById("btn-t2").style.display = "none";
+        document.getElementById("link-t2").style.display = "block";
+        document.getElementById("card-t2").style.opacity = "1";
+        document.getElementById("card-t2").style.border = "none";
+        document.getElementById("card-t2").querySelector("h3").innerText = "📝 Premium Task 1";
+
+        // टास्क 3 खोलें
+        document.getElementById("btn-t3").style.display = "none";
+        document.getElementById("link-t3").style.display = "block";
+        document.getElementById("card-t3").style.opacity = "1";
+        document.getElementById("card-t3").style.border = "none";
+        document.getElementById("card-t3").querySelector("h3").innerText = "📝 Premium Task 2";
+
+        // टास्क 4 खोलें
+        document.getElementById("btn-t4").style.display = "none";
+        document.getElementById("link-t4").style.display = "block";
+        document.getElementById("card-t4").style.opacity = "1";
+        document.getElementById("card-t4").style.border = "none";
+        document.getElementById("card-t4").querySelector("h3").innerText = "📝 Mega Task";
     }
 </script>
 
