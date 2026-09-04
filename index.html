@@ -9,6 +9,13 @@
         input { width: 90%; padding: 12px; margin: 15px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
         button { width: 95%; padding: 15px; background: #25D366; color: white; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; margin-top: 10px; cursor: pointer; }
     </style>
+    
+    <script>
+        // यह कोड चेक करेगा कि क्या यूज़र पहले से रजिस्टर है
+        if (localStorage.getItem("isRegistered") === "true") {
+            window.location.href = "https://sandeep283452-png.github.io/My-aap-/home.html";
+        }
+    </script>
 </head>
 <body>
     <div class="box">
@@ -38,6 +45,8 @@
           }).then(
               response => response.json()
           ).then((html) => {
+            // यह लाइन फोन में सेव कर देगी कि यूज़र रजिस्टर हो चुका है
+            localStorage.setItem("isRegistered", "true");
             window.location.href = 'https://sandeep283452-png.github.io/My-aap-/home.html';
           });
         });
