@@ -45,7 +45,7 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* अपडेटेड नोटिस बोर्ड डिज़ाइन */
+        /* नोटिस बोर्ड डिज़ाइन */
         .notice-board {
             background-color: #fffae6;
             color: #856404;
@@ -56,19 +56,6 @@
             line-height: 1.5;
             border: 1px solid #ffeeba;
             text-align: left;
-        }
-
-        .whatsapp-top-btn {
-            display: inline-block;
-            background-color: #25D366;
-            color: white;
-            text-decoration: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            margin-top: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         /* मेन कंटेंट एरिया */
@@ -93,7 +80,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* कार्ड्स का डिज़ाइन (Task, Wallet, Payment) */
+        /* कार्ड्स का डिज़ाइन */
         .card {
             background: white;
             padding: 20px;
@@ -117,6 +104,8 @@
             cursor: pointer;
             width: 100%;
             transition: 0.2s;
+            display: block;
+            text-decoration: none;
         }
         .action-btn:hover { background: #764ba2; }
 
@@ -158,49 +147,37 @@
 
 <div class="app-frame">
     
-    <!-- टॉप हेडर -->
     <div class="header">
         <h2>💰 EarnPro</h2>
         
-        <!-- आपका कस्टम नोटिस (इंग्लिश में) -->
         <div class="notice-board">
             <strong>Important Notice:</strong> Please submit a newly created Gmail account directly from your phone. Ensure that NO recovery email or phone number is linked to this Gmail account.
         </div>
-        
-        <!-- 91 के बाद अपना व्हाट्सएप नंबर डालें -->
-        <a href="https://wa.me/919876543210?text=Hello,%20I%20need%20help%20with%20the%20EarnPro%20App" class="whatsapp-top-btn" target="_blank">
-            💬 Contact on WhatsApp
-        </a>
     </div>
 
-    <!-- मेन कंटेंट -->
     <div class="content-area">
         
-        <!-- 1. Tasks / Work Section -->
         <div id="tasks-section" class="tab-content active">
             <div class="card">
-                <h3>📝 Daily Task 1</h3>
-                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Watch full video and subscribe to earn 50 coins.</p>
-                <button class="action-btn" onclick="alert('Task Started!')">Start Task</button>
-            </div>
-            <div class="card">
-                <h3>📝 Daily Task 2</h3>
-                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Share app link with 3 friends.</p>
-                <button class="action-btn" onclick="alert('Task Started!')">Start Task</button>
+                <h3>📝 Get Your Daily Tasks</h3>
+                <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
+                    Click the button below to message me directly on WhatsApp. I will assign you your daily tasks there!
+                </p>
+                <a href="https://wa.me/919876543210?text=Hello,%20I%20am%20ready%20for%20my%20daily%20tasks!" class="action-btn" style="background-color: #25D366; text-align: center;" target="_blank">
+                    📲 Get Tasks on WhatsApp
+                </a>
             </div>
         </div>
 
-        <!-- 2. Wallet / Coin Section -->
         <div id="wallet-section" class="tab-content">
             <div class="card">
                 <h3>Your Wallet</h3>
                 <div class="coin-balance">🪙 150</div>
                 <p style="color: #888; font-size: 14px; margin-bottom: 20px;">Total Coins Available</p>
-                <button class="action-btn" onclick="alert('Coins Claimed Successfully!')" style="background: #f39c12;">🎁 Claim Daily Bonus</button>
+                <button class="action-btn" onclick="alert('Please contact admin to update coins!')" style="background: #f39c12;">🎁 Check History</button>
             </div>
         </div>
 
-        <!-- 3. Payment Section -->
         <div id="payment-section" class="tab-content">
             <div class="card">
                 <h3>Withdraw Funds</h3>
@@ -215,13 +192,14 @@
                     </select>
                 </div>
                 
-                <button class="action-btn" style="background: #28a745;">Submit Request</button>
+                <a href="https://wa.me/919876543210?text=Hello,%20I%20want%20to%20withdraw%20my%20payment." class="action-btn" style="background: #28a745; text-align: center;" target="_blank">
+                    Submit Request
+                </a>
             </div>
         </div>
 
     </div>
 
-    <!-- बॉटम नेविगेशन बार -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('tasks')">
             <span class="icon">📋</span>
@@ -239,7 +217,6 @@
 
 </div>
 
-<!-- JavaScript फॉर टैब स्विचिंग -->
 <script>
     function switchTab(tabName) {
         // सभी टैब कंटेंट को छुपाएं
