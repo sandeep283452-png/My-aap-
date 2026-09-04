@@ -1,158 +1,263 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coin Wallet App</title>
+    <title>Earn Coins App</title>
     <style>
-        /* बैकग्राउंड और बेसिक रिसेट */
+        /* बेसिक रिसेट और फॉन्ट */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            /* यहाँ आप अपनी पसंद के इंडियन करेंसी वाले पोस्टर का लिंक डाल सकते हैं */
-            background-image: url('https://images.unsplash.com/photo-1623844390022-7901869e5d44?auto=format&fit=crop&w=1080&q=80'); 
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-color: #e9ecef;
             display: flex;
             justify-content: center;
-            align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
 
-        /* ऐप का मेन कंटेनर (Glassmorphism Effect) */
-        .app-container {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        /* टॉप आइकन */
-        .top-icon {
-            font-size: 60px;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-
-        /* कॉइन बैलेंस कार्ड */
-        .balance-card {
-            background: linear-gradient(135deg, #ffd700, #ffaa00);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            color: #000;
-            box-shadow: 0 4px 15px rgba(255, 170, 0, 0.4);
-        }
-
-        .balance-card h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .balance-card .coins {
-            font-size: 32px;
-            font-weight: bold;
-        }
-
-        /* बटन्स का डिज़ाइन */
-        .btn {
-            display: block;
+        /* ऐप का मेन फ्रेम (मोबाइल जैसा लुक) */
+        .app-frame {
             width: 100%;
-            padding: 15px;
-            margin: 15px 0;
+            max-width: 400px;
+            background-color: #f8f9fa;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* टॉप हेडर */
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* अपडेटेड नोटिस बोर्ड डिज़ाइन */
+        .notice-board {
+            background-color: #fffae6;
+            color: #856404;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-top: 15px;
+            line-height: 1.5;
+            border: 1px solid #ffeeba;
+            text-align: left;
+        }
+
+        .whatsapp-top-btn {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* मेन कंटेंट एरिया */
+        .content-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
+
+        /* टैब कंटेंट को छिपाने/दिखाने के लिए */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* कार्ड्स का डिज़ाइन (Task, Wallet, Payment) */
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .card h3 { color: #333; margin-bottom: 10px; }
+        .coin-balance { font-size: 35px; font-weight: bold; color: #f39c12; margin: 15px 0; }
+        
+        .action-btn {
+            background: #667eea;
+            color: white;
             border: none;
-            border-radius: 12px;
+            padding: 12px 20px;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            text-decoration: none;
-            color: white;
-            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .action-btn:hover { background: #764ba2; }
+
+        /* बॉटम नेविगेशन बार */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
+        .nav-item {
+            text-align: center;
+            color: #888;
+            cursor: pointer;
+            flex: 1;
+            padding: 10px;
+            transition: 0.3s;
         }
 
-        /* WhatsApp बटन */
-        .whatsapp-btn {
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+        .nav-item .icon { font-size: 24px; display: block; margin-bottom: 5px; }
+        .nav-item .label { font-size: 12px; font-weight: bold; }
+        
+        .nav-item.active {
+            color: #667eea;
         }
-
-        /* Payment बटन */
-        .payment-btn {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
-        }
-
-        /* पेमेंट सेक्शन (जो बटन क्लिक करने पर खुलेगा) */
-        .payment-details {
-            display: none;
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 10px;
-            font-size: 14px;
-            color: #333;
+        .nav-item.active .icon {
+            transform: scale(1.1);
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <div class="top-icon">💸 💰</div>
+<div class="app-frame">
+    
+    <!-- टॉप हेडर -->
+    <div class="header">
+        <h2>💰 EarnPro</h2>
         
-        <h2>आपका वॉलेट</h2>
+        <!-- आपका कस्टम नोटिस (इंग्लिश में) -->
+        <div class="notice-board">
+            <strong>Important Notice:</strong> Please submit a newly created Gmail account directly from your phone. Ensure that NO recovery email or phone number is linked to this Gmail account.
+        </div>
+        
+        <!-- 91 के बाद अपना व्हाट्सएप नंबर डालें -->
+        <a href="https://wa.me/919876543210?text=Hello,%20I%20need%20help%20with%20the%20EarnPro%20App" class="whatsapp-top-btn" target="_blank">
+            💬 Contact on WhatsApp
+        </a>
+    </div>
 
-        <div class="balance-card">
-            <h3>कुल कॉइन्स (Balance)</h3>
-            <div class="coins">🪙 50 Coins</div>
+    <!-- मेन कंटेंट -->
+    <div class="content-area">
+        
+        <!-- 1. Tasks / Work Section -->
+        <div id="tasks-section" class="tab-content active">
+            <div class="card">
+                <h3>📝 Daily Task 1</h3>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Watch full video and subscribe to earn 50 coins.</p>
+                <button class="action-btn" onclick="alert('Task Started!')">Start Task</button>
+            </div>
+            <div class="card">
+                <h3>📝 Daily Task 2</h3>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Share app link with 3 friends.</p>
+                <button class="action-btn" onclick="alert('Task Started!')">Start Task</button>
+            </div>
         </div>
 
-        <a href="https://wa.me/27736060982?text=Hello,%20I%20want%20to%20withdraw%20my%20coins!" class="btn whatsapp-btn" target="_blank">
-            💬 WhatsApp पर संपर्क करें
-        </a>
+        <!-- 2. Wallet / Coin Section -->
+        <div id="wallet-section" class="tab-content">
+            <div class="card">
+                <h3>Your Wallet</h3>
+                <div class="coin-balance">🪙 150</div>
+                <p style="color: #888; font-size: 14px; margin-bottom: 20px;">Total Coins Available</p>
+                <button class="action-btn" onclick="alert('Coins Claimed Successfully!')" style="background: #f39c12;">🎁 Claim Daily Bonus</button>
+            </div>
+        </div>
 
-        <button class="btn payment-btn" onclick="togglePayment()">
-            💳 Payment Method
-        </button>
+        <!-- 3. Payment Section -->
+        <div id="payment-section" class="tab-content">
+            <div class="card">
+                <h3>Withdraw Funds</h3>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Minimum withdrawal is 500 Coins.</p>
+                
+                <div style="text-align: left; margin-bottom: 15px;">
+                    <label style="font-size: 14px; font-weight: bold;">Select Method:</label>
+                    <select style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #ccc;">
+                        <option>UPI</option>
+                        <option>Paytm</option>
+                        <option>Bank Transfer</option>
+                    </select>
+                </div>
+                
+                <button class="action-btn" style="background: #28a745;">Submit Request</button>
+            </div>
+        </div>
 
-        <div class="payment-details" id="payment-box">
-            <p><strong>Withdrawal Options:</strong></p>
-            <p>✅ UPI / Paytm / PhonePe</p>
-            <p>✅ Bank Transfer</p>
-            <p style="margin-top: 10px; font-size: 12px; color: #666;">
-                *कृपया पेमेंट लेने के लिए ऊपर WhatsApp बटन पर क्लिक करके अपना UPI ID भेजें।
-            </p>
+    </div>
+
+    <!-- बॉटम नेविगेशन बार -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('tasks')">
+            <span class="icon">📋</span>
+            <span class="label">Tasks</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('wallet')">
+            <span class="icon">💼</span>
+            <span class="label">Wallet</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('payment')">
+            <span class="icon">💳</span>
+            <span class="label">Payment</span>
         </div>
     </div>
 
-    <script>
-        // पेमेंट मेथड वाले बॉक्स को खोलने और बंद करने का फंक्शन
-        function togglePayment() {
-            var paymentBox = document.getElementById("payment-box");
-            if (paymentBox.style.display === "none" || paymentBox.style.display === "") {
-                paymentBox.style.display = "block";
-            } else {
-                paymentBox.style.display = "none";
-            }
-        }
-    </script>
+</div>
+
+<!-- JavaScript फॉर टैब स्विचिंग -->
+<script>
+    function switchTab(tabName) {
+        // सभी टैब कंटेंट को छुपाएं
+        document.getElementById('tasks-section').classList.remove('active');
+        document.getElementById('wallet-section').classList.remove('active');
+        document.getElementById('payment-section').classList.remove('active');
+        
+        // सभी नेव बटन्स से एक्टिव क्लास हटाएं
+        let navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => item.classList.remove('active'));
+
+        // जो टैब क्लिक हुआ है उसे दिखाएं
+        document.getElementById(tabName + '-section').classList.add('active');
+        
+        // क्लिक किए गए नेव बटन को एक्टिव करें
+        event.currentTarget.classList.add('active');
+    }
+</script>
 
 </body>
 </html>
