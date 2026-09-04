@@ -7,7 +7,13 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: #e9ecef; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
-        .app-frame { width: 100%; max-width: 400px; background-color: #f8f9fa; height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        
+        /* ऐप फ्रेम की डिज़ाइन */
+        .app-frame { width: 100%; max-width: 400px; background-color: #f8f9fa; height: 100vh; position: relative; display: none; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        
+        /* सर्वर डाउन स्क्रीन का डिज़ाइन */
+        #server-down-msg { display: none; width: 100%; max-width: 400px; height: 100vh; background: #fff; text-align: center; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        
         .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .notice-board { background-color: #fffae6; color: #856404; padding: 12px; border-radius: 8px; font-size: 13px; margin-top: 15px; line-height: 1.5; border: 1px solid #ffeeba; text-align: left; }
         .content-area { flex: 1; padding: 20px; overflow-y: auto; padding-bottom: 80px; }
@@ -26,13 +32,19 @@
         .nav-item.active { color: #667eea; }
         .nav-item.active .icon { transform: scale(1.1); }
         
-        /* बोनस पॉप-अप का डिज़ाइन */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-content { background: white; padding: 30px 20px; border-radius: 15px; text-align: center; width: 85%; max-width: 350px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
+
+<!-- === 1. सर्वर डाउन स्क्रीन (4 से 6 बजे के अलावा यही दिखेगा) === -->
+<div id="server-down-msg">
+    <h1 style="font-size: 50px; margin-bottom: 20px;">🚫</h1>
+    <h2 style="color: #dc3545; margin-bottom: 10px;">सर्वर बंद है</h2>
+    <p style="color: #555; font-size: 16px; line-height: 1.5;">यह ऐप केवल <strong>शाम 4:00 बजे से 6:00 बजे</strong> तक ही चालू रहता है।<br><br>कृपया सही समय पर वापस आएं!</p>
+</div>
 
 <!-- === बोनस पॉप-अप शुरू === -->
 <div id="bonus-modal" class="modal-overlay">
@@ -43,9 +55,9 @@
         <button id="claim-btn" class="action-btn" style="background-color: #28a745;">🎁 Claim Now</button>
     </div>
 </div>
-<!-- === बोनस पॉप-अप खत्म === -->
 
-<div class="app-frame">
+<!-- === मुख्य ऐप (app-frame) === -->
+<div class="app-frame" id="main-app">
     
     <div class="header">
         <h2>💰 EarnPro</h2>
@@ -57,6 +69,15 @@
     <div class="content-area">
         
         <div id="tasks-section" class="tab-content active">
+            
+            <!-- === नया फीचर: Refer & Earn === -->
+            <div class="card" style="background: #e3f2fd; border: 2px solid #90caf9;">
+                <h3>📢 Refer & Earn</h3>
+                <p style="color: #555; font-size: 14px; margin-bottom: 10px;">अपने दोस्तों को रेफर करें और 48 घंटे बाद पाएं <span style="font-weight: bold; color: #f39c12; font-size: 16px;">💰 200 Coins</span></p>
+                <button onclick="startReferralTimer()" class="action-btn" style="background-color: #0088cc;">📲 Share on WhatsApp</button>
+                <p id="referral-status" style="font-size: 13px; font-weight: bold; color: #d35400; margin-top: 10px; display: none;">⏳ 48 घंटे का टाइमर चल रहा है...</p>
+            </div>
+            
             <!-- Task 1 -->
             <div class="card">
                 <h3>📝 Daily Task 1</h3>
@@ -95,7 +116,7 @@
             </div>
         </div>
 
-        <!-- === नया विड्रॉल सेक्शन === -->
+        <!-- === विड्रॉल सेक्शन (अब डाटा-कॉस्ट के साथ) === -->
         <div id="payment-section" class="tab-content">
             <div class="card">
                 <h3>Withdraw Funds</h3>
@@ -104,12 +125,13 @@
                 <div style="text-align: left; margin-bottom: 15px;">
                     <label style="font-size: 14px; font-weight: bold;">Select Amount (Coins = ₹):</label>
                     <select id="withdraw-amount" style="width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #ccc; font-weight: bold; font-size: 15px;">
-                        <option value="100 Coins (= ₹90)">🪙 100 Coins = ₹90</option>
-                        <option value="200 Coins (= ₹180)">🪙 200 Coins = ₹180</option>
-                        <option value="300 Coins (= ₹270)">🪙 300 Coins = ₹270</option>
-                        <option value="400 Coins (= ₹360)">🪙 400 Coins = ₹360</option>
-                        <option value="500 Coins (= ₹450)">🪙 500 Coins = ₹450</option>
-                        <option value="1000 Coins (= ₹900)">🪙 1000 Coins = ₹900</option>
+                        <!-- data-cost में ज़रूरी कॉइन सेट किए गए हैं -->
+                        <option value="100 Coins (= ₹90)" data-cost="100">🪙 100 Coins = ₹90</option>
+                        <option value="200 Coins (= ₹180)" data-cost="200">🪙 200 Coins = ₹180</option>
+                        <option value="300 Coins (= ₹270)" data-cost="300">🪙 300 Coins = ₹270</option>
+                        <option value="400 Coins (= ₹360)" data-cost="400">🪙 400 Coins = ₹360</option>
+                        <option value="500 Coins (= ₹450)" data-cost="500">🪙 500 Coins = ₹450</option>
+                        <option value="1000 Coins (= ₹900)" data-cost="1000">🪙 1000 Coins = ₹900</option>
                     </select>
 
                     <label style="font-size: 14px; font-weight: bold;">Select Method:</label>
@@ -142,7 +164,34 @@
 </div>
 
 <script>
-    // 1. टैब बदलने का सिस्टम
+    // === 1. टाइम लिमिट सिस्टम (शाम 4 से 6 बजे) ===
+    window.onload = function() {
+        var currentHour = new Date().getHours(); 
+        
+        // 16 मतलब शाम 4 बजे, 18 मतलब शाम 6 बजे
+        if (currentHour >= 16 && currentHour < 18) {
+            document.getElementById("main-app").style.display = "flex"; // ऐप दिखाएँ
+            initAppLogic(); // ऐप के बाकी फंक्शन चालू करें
+        } else {
+            document.getElementById("server-down-msg").style.display = "flex"; // ऐप छुपाएं, सर्वर डाउन दिखाएं
+        }
+    };
+
+    function initAppLogic() {
+        // वॉलेट बैलेंस सेट करना
+        let hasClaimed = localStorage.getItem("hasClaimedBonus");
+        let walletCoins = parseInt(localStorage.getItem("userCoins")) || 0;
+        document.getElementById("wallet-balance").innerText = "🪙 " + walletCoins;
+
+        if (!hasClaimed) {
+            document.getElementById("bonus-modal").style.display = "flex";
+        }
+        
+        // रेफरल टाइमर चेक करना
+        checkReferralTimer();
+    }
+
+    // टैब बदलने का सिस्टम
     function switchTab(tabName) {
         document.getElementById('tasks-section').classList.remove('active');
         document.getElementById('wallet-section').classList.remove('active');
@@ -155,39 +204,87 @@
         event.currentTarget.classList.add('active');
     }
 
-    // 2. बोनस पॉप-अप और वॉलेट का सिस्टम
-    window.onload = function() {
-        // चेक करें कि क्या यूज़र ने बोनस क्लेम कर लिया है
-        let hasClaimed = localStorage.getItem("hasClaimedBonus");
-        let walletCoins = localStorage.getItem("userCoins") || "0";
-        
-        document.getElementById("wallet-balance").innerText = "🪙 " + walletCoins;
-
-        // अगर क्लेम नहीं किया, तो पॉप-अप दिखाएं
-        if (!hasClaimed) {
-            document.getElementById("bonus-modal").style.display = "flex";
-        }
-    };
-
-    // जब यूज़र Claim Now बटन दबाएगा
+    // बोनस क्लेम करने का सिस्टम
     document.getElementById("claim-btn").addEventListener("click", function() {
         localStorage.setItem("hasClaimedBonus", "true");
-        localStorage.setItem("userCoins", "50"); // वॉलेट में 50 कॉइन जोड़ दिए
-        document.getElementById("wallet-balance").innerText = "🪙 50";
+        let currentCoins = parseInt(localStorage.getItem("userCoins")) || 0;
+        currentCoins += 50; // 50 कॉइन जोड़ दिए
+        localStorage.setItem("userCoins", currentCoins); 
+        document.getElementById("wallet-balance").innerText = "🪙 " + currentCoins;
         document.getElementById("bonus-modal").style.display = "none";
     });
 
-    // 3. व्हाट्सएप पर विड्रॉल मैसेज भेजने का सिस्टम
+    // === 2. नया विड्रॉल लॉक सिस्टम ===
     function sendWithdrawRequest() {
-        let amount = document.getElementById("withdraw-amount").value;
-        let method = document.getElementById("withdraw-method").value;
-        // एकदम प्रोफेशनल मैसेज
-        let msg = "Hello Admin, I want to withdraw " + amount + " via " + method + ". Please process my payment.";
-        let link = "https://wa.me/27736060982?text=" + encodeURIComponent(msg);
-        window.open(link, "_blank");
+        let amountSelect = document.getElementById("withdraw-amount");
+        let selectedOption = amountSelect.options[amountSelect.selectedIndex];
+        
+        let requiredCoins = parseInt(selectedOption.getAttribute("data-cost")); // कितने कॉइन चाहिए
+        let currentCoins = parseInt(localStorage.getItem("userCoins")) || 0; // यूजर के पास कितने हैं
+
+        if (currentCoins < requiredCoins) {
+            // अगर कॉइन कम हैं, तो अलर्ट दिखाएं और व्हाट्सप्प पर न जाने दें
+            alert("❌ Withdrawal Failed!\nआपके पास पर्याप्त कॉइन नहीं हैं। आपने " + requiredCoins + " कॉइन का विड्रॉल चुना है, लेकिन आपके वॉलेट में केवल " + currentCoins + " कॉइन हैं।");
+        } else {
+            // अगर कॉइन पूरे हैं, तो व्हाट्सप्प पर भेजें
+            let amount = amountSelect.value;
+            let method = document.getElementById("withdraw-method").value;
+            let msg = "Hello Admin, I have successfully earned " + requiredCoins + " coins. I want to withdraw " + amount + " via " + method + ". Please process my payment.";
+            let link = "https://wa.me/27736060982?text=" + encodeURIComponent(msg);
+            window.open(link, "_blank");
+        }
     }
 
-    // 4. 5 दिन के लॉक का जादुई सिस्टम
+    // === 3. रेफर एंड अर्न सिस्टम (48 घंटे का टाइमर) ===
+    function startReferralTimer() {
+        let msg = "Hey! Download EarnPro App and start earning daily coins today! Click here to join: [YOUR_APP_LINK_HERE]";
+        let waLink = "https://wa.me/?text=" + encodeURIComponent(msg);
+        
+        let isPending = localStorage.getItem("referPending");
+        if (!isPending) {
+            localStorage.setItem("referStartTime", new Date().getTime()); // शेयर करने का टाइम सेव किया
+            localStorage.setItem("referPending", "true");
+            document.getElementById("referral-status").style.display = "block";
+            document.getElementById("referral-status").innerText = "⏳ आपका 48 घंटे का टाइमर शुरू हो गया है!";
+        }
+        window.open(waLink, "_blank"); // व्हाट्सएप पर शेयर करने के लिए खोलें
+    }
+
+    function checkReferralTimer() {
+        let isPending = localStorage.getItem("referPending");
+        if (isPending === "true") {
+            let startTime = parseInt(localStorage.getItem("referStartTime"));
+            let currentTime = new Date().getTime();
+            
+            // कितने घंटे बीत चुके हैं
+            let hoursPassed = (currentTime - startTime) / (1000 * 60 * 60);
+
+            if (hoursPassed >= 48) {
+                // 48 घंटे पूरे होने पर 200 कॉइन जोड़ दें
+                let coins = parseInt(localStorage.getItem("userCoins")) || 0;
+                coins += 200;
+                localStorage.setItem("userCoins", coins);
+                localStorage.setItem("referPending", "completed");
+                
+                document.getElementById("wallet-balance").innerText = "🪙 " + coins;
+                document.getElementById("referral-status").style.display = "block";
+                document.getElementById("referral-status").innerText = "✅ रेफरल रिवॉर्ड (200 Coins) जुड़ गए हैं!";
+                document.getElementById("referral-status").style.color = "green";
+                
+                alert("🎉 बधाई हो! आपके रेफरल के 48 घंटे पूरे हो गए हैं। आपके वॉलेट में 200 Coins जोड़ दिए गए हैं!");
+            } else {
+                // अभी 48 घंटे पूरे नहीं हुए
+                document.getElementById("referral-status").style.display = "block";
+                document.getElementById("referral-status").innerText = "⏳ 48 घंटे का टाइमर चल रहा है...";
+            }
+        } else if (isPending === "completed") {
+            document.getElementById("referral-status").style.display = "block";
+            document.getElementById("referral-status").innerText = "✅ रेफरल रिवॉर्ड (200 Coins) जुड़ गए हैं!";
+            document.getElementById("referral-status").style.color = "green";
+        }
+    }
+
+    // 5 दिन के लॉक का जादुई सिस्टम
     let startDate = localStorage.getItem("appStartDate");
     if (!startDate) {
         startDate = new Date().getTime(); 
