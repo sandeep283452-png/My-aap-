@@ -43,12 +43,22 @@
     <p style="color: #555; font-size: 16px; line-height: 1.5;">यह ऐप केवल <strong>शाम 4:00 बजे से 6:00 बजे</strong> तक ही चालू रहता है।<br><br>कृपया सही समय पर वापस आएं!</p>
 </div>
 
+<!-- Bonus Modal -->
 <div id="bonus-modal" class="modal-overlay">
     <div class="modal-content">
         <h2 style="font-size: 24px; color: #333;">🎉 Congratulations! 🎉</h2>
         <p style="color: #666; margin-top: 10px; font-size: 15px;">EarnPro में आपका स्वागत है! आपको मिलता है शानदार साइनअप बोनस।</p>
         <div style="font-size: 35px; font-weight: bold; color: #f39c12; margin: 20px 0;">🪙 50 Coins</div>
         <button id="claim-btn" class="action-btn" style="background-color: #28a745;">🎁 Claim Now</button>
+    </div>
+</div>
+
+<!-- नया कस्टम अलर्ट पॉपअप (इसमें GitHub का नाम नहीं दिखेगा) -->
+<div id="custom-alert-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 id="custom-alert-title" style="font-size: 20px; color: #333; margin-bottom: 10px;">Message</h2>
+        <p id="custom-alert-message" style="color: #666; font-size: 15px; margin-bottom: 20px; line-height: 1.5;"></p>
+        <button onclick="closeCustomAlert()" class="action-btn" style="background-color: #667eea;">OK</button>
     </div>
 </div>
 
@@ -105,7 +115,6 @@
                 <h3>Your Wallet</h3>
                 <div class="coin-balance" id="wallet-balance">🪙 0</div>
                 <p style="color: #888; font-size: 14px; margin-bottom: 20px;">Total Coins Available</p>
-                <!-- यहाँ मैंने पुराना अलर्ट हटाकर नया फंक्शन कॉल (checkAndSaveHistory) लगा दिया है -->
                 <button class="action-btn" onclick="checkAndSaveHistory()" style="background: #f39c12;">🎁 Check History</button>
             </div>
         </div>
@@ -156,6 +165,19 @@
 </div>
 
 <script>
+    // === कस्टम अलर्ट दिखाने और बंद करने का फंक्शन ===
+    function showCustomAlert(title, message) {
+        document.getElementById("custom-alert-title").innerText = title;
+        // लाइन ब्रेक (\n) को HTML ब्रेक (<br>) में बदलता है ताकि मेसेज सही दिखे
+        document.getElementById("custom-alert-message").innerHTML = message.replace(/\n/g, '<br>');
+        document.getElementById("custom-alert-modal").style.display = "flex";
+    }
+
+    function closeCustomAlert() {
+        document.getElementById("custom-alert-modal").style.display = "none";
+    }
+    // ===============================================
+
     window.onload = function() {
         var currentHour = new Date().getHours(); 
         if (currentHour >= 16 && currentHour < 18) {
@@ -215,12 +237,14 @@
         let premiumCount = parseInt(localStorage.getItem('premiumTaskCount')) || 0;
 
         if (dailyCount < 2 || megaCount < 1 || premiumCount < 1) {
-            alert("❌ Withdrawal Locked!\nविड्रॉल करने के लिए आपको कम से कम 2 'Daily Task', 1 'Mega Task' और 1 'Premium Task' (जो 5 दिन बाद खुलता है) पूरा करना ज़रूरी है। (चाहे आपके पास कितने भी कॉइन हों!)");
+            // यहाँ पुराना alert() हटाकर showCustomAlert() लगाया गया है
+            showCustomAlert("❌ Withdrawal Locked!", "विड्रॉल करने के लिए आपको कम से कम 2 'Daily Task', 1 'Mega Task' और 1 'Premium Task' (जो 5 दिन बाद खुलता है) पूरा करना ज़रूरी है। (चाहे आपके पास कितने भी कॉइन हों!)");
             return; 
         }
 
         if (currentCoins < requiredCoins) {
-            alert("❌ Withdrawal Failed!\nआपके पास पर्याप्त कॉइन नहीं हैं। आपने " + requiredCoins + " कॉइन का विड्रॉल चुना है, लेकिन आपके वॉलेट में केवल " + currentCoins + " कॉइन हैं।");
+            // यहाँ भी कस्टम अलर्ट है
+            showCustomAlert("❌ Withdrawal Failed!", "आपके पास पर्याप्त कॉइन नहीं हैं। आपने " + requiredCoins + " कॉइन का विड्रॉल चुना है, लेकिन आपके वॉलेट में केवल " + currentCoins + " कॉइन हैं।");
             return;
         } 
 
@@ -264,7 +288,8 @@
                 document.getElementById("referral-status").innerText = "✅ रेफरल रिवॉर्ड (200 Coins) जुड़ गए हैं!";
                 document.getElementById("referral-status").style.color = "green";
                 
-                alert("🎉 बधाई हो! आपके रेफरल के 48 घंटे पूरे हो गए हैं। आपके वॉलेट में 200 Coins जोड़ दिए गए हैं!");
+                // कस्टम अलर्ट
+                showCustomAlert("🎉 बधाई हो!", "आपके रेफरल के 48 घंटे पूरे हो गए हैं। आपके वॉलेट में 200 Coins जोड़ दिए गए हैं!");
             } else {
                 document.getElementById("referral-status").style.display = "block";
                 document.getElementById("referral-status").innerText = "⏳ 48 घंटे का टाइमर चल रहा है...";
@@ -291,21 +316,17 @@
         document.getElementById("btn-t4").style.display = "none"; document.getElementById("link-t4").style.display = "block"; document.getElementById("card-t4").style.opacity = "1"; document.getElementById("card-t4").style.border = "none"; document.getElementById("card-t4").querySelector("h3").innerText = "📝 Mega Task";
     }
 
-    // === यहाँ नया हिस्ट्री चेक करने वाला फंक्शन जोड़ा गया है ===
     function checkAndSaveHistory() {
-        // आज की तारीख निकालें
         let today = new Date().toLocaleDateString();
-
-        // लोकल स्टोरेज (मोबाइल की मेमोरी) से चेक करें कि आखिरी क्लेम कब हुआ था
         let lastClaimDate = localStorage.getItem("lastCoinClaimDate");
 
         if (lastClaimDate === today) {
-            // अगर आज की तारीख पहले से सेव है
-            alert("हिस्ट्री चेक: आप आज के कॉइन पहले ही क्लेम कर चुके हैं!");
+            // कस्टम अलर्ट
+            showCustomAlert("History Check", "आप आज के कॉइन पहले ही क्लेम कर चुके हैं!");
         } else {
-            // अगर आज क्लेम नहीं हुआ है, तो आज की तारीख डेटाबेस (स्टोरेज) में सेव करें
             localStorage.setItem("lastCoinClaimDate", today);
-            alert("सक्सेस! आपके आज के कॉइन क्लेम हो गए हैं और हिस्ट्री में सेव हो गए हैं।");
+            // कस्टम अलर्ट
+            showCustomAlert("सक्सेस!", "आपके आज के कॉइन क्लेम हो गए हैं और हिस्ट्री में सेव हो गए हैं।");
         }
     }
 </script>
