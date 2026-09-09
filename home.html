@@ -105,7 +105,8 @@
                 <h3>Your Wallet</h3>
                 <div class="coin-balance" id="wallet-balance">🪙 0</div>
                 <p style="color: #888; font-size: 14px; margin-bottom: 20px;">Total Coins Available</p>
-                <button class="action-btn" onclick="alert('Please contact admin on WhatsApp to check history or update coins!')" style="background: #f39c12;">🎁 Check History</button>
+                <!-- यहाँ मैंने पुराना अलर्ट हटाकर नया फंक्शन कॉल (checkAndSaveHistory) लगा दिया है -->
+                <button class="action-btn" onclick="checkAndSaveHistory()" style="background: #f39c12;">🎁 Check History</button>
             </div>
         </div>
 
@@ -197,13 +198,11 @@
         document.getElementById("bonus-modal").style.display = "none";
     });
 
-    // === नया फंक्शन: क्लिक होने पर टास्क को गिनना ===
     function trackTask(taskType) {
         let count = parseInt(localStorage.getItem(taskType + 'TaskCount')) || 0;
         localStorage.setItem(taskType + 'TaskCount', count + 1);
     }
 
-    // === अपडेटेड फंक्शन: विड्रॉल में टास्क की शर्त लगाना ===
     function sendWithdrawRequest() {
         let amountSelect = document.getElementById("withdraw-amount");
         let selectedOption = amountSelect.options[amountSelect.selectedIndex];
@@ -211,24 +210,20 @@
         let requiredCoins = parseInt(selectedOption.getAttribute("data-cost")); 
         let currentCoins = parseInt(localStorage.getItem("userCoins")) || 0; 
 
-        // फोन की मेमोरी से टास्क की गिनती निकालना
         let dailyCount = parseInt(localStorage.getItem('dailyTaskCount')) || 0;
         let megaCount = parseInt(localStorage.getItem('megaTaskCount')) || 0;
         let premiumCount = parseInt(localStorage.getItem('premiumTaskCount')) || 0;
 
-        // शर्त 1: क्या यूज़र ने डेली(2), मेगा(1) और प्रीमियम(1) किया है?
         if (dailyCount < 2 || megaCount < 1 || premiumCount < 1) {
             alert("❌ Withdrawal Locked!\nविड्रॉल करने के लिए आपको कम से कम 2 'Daily Task', 1 'Mega Task' और 1 'Premium Task' (जो 5 दिन बाद खुलता है) पूरा करना ज़रूरी है। (चाहे आपके पास कितने भी कॉइन हों!)");
-            return; // यही रोक देगा, व्हाट्सएप नहीं खुलेगा
+            return; 
         }
 
-        // शर्त 2: क्या कॉइन पूरे हैं?
         if (currentCoins < requiredCoins) {
             alert("❌ Withdrawal Failed!\nआपके पास पर्याप्त कॉइन नहीं हैं। आपने " + requiredCoins + " कॉइन का विड्रॉल चुना है, लेकिन आपके वॉलेट में केवल " + currentCoins + " कॉइन हैं।");
             return;
         } 
 
-        // अगर दोनों शर्तें पास, तो विड्रॉल का मैसेज भेजें
         let amount = amountSelect.value;
         let method = document.getElementById("withdraw-method").value;
         let msg = "Hello Admin, I have completed all required tasks (Daily, Mega, & Premium) and earned " + requiredCoins + " coins. I want to withdraw " + amount + " via " + method + ". Please process my payment.";
@@ -237,7 +232,6 @@
     }
 
     function startReferralTimer() {
-        // यहाँ आपका असली MediaFire ऐप डाउनलोड लिंक ऐड कर दिया गया है
         let msg = "Hey! Download EarnPro App and start earning daily coins today! Click here to join: https://www.mediafire.com/file/78310bppmo1iyne/app-release.apk/file";
         let waLink = "https://wa.me/?text=" + encodeURIComponent(msg);
         
@@ -295,6 +289,24 @@
         document.getElementById("btn-t2").style.display = "none"; document.getElementById("link-t2").style.display = "block"; document.getElementById("card-t2").style.opacity = "1"; document.getElementById("card-t2").style.border = "none"; document.getElementById("card-t2").querySelector("h3").innerText = "📝 Premium Task 1";
         document.getElementById("btn-t3").style.display = "none"; document.getElementById("link-t3").style.display = "block"; document.getElementById("card-t3").style.opacity = "1"; document.getElementById("card-t3").style.border = "none"; document.getElementById("card-t3").querySelector("h3").innerText = "📝 Premium Task 2";
         document.getElementById("btn-t4").style.display = "none"; document.getElementById("link-t4").style.display = "block"; document.getElementById("card-t4").style.opacity = "1"; document.getElementById("card-t4").style.border = "none"; document.getElementById("card-t4").querySelector("h3").innerText = "📝 Mega Task";
+    }
+
+    // === यहाँ नया हिस्ट्री चेक करने वाला फंक्शन जोड़ा गया है ===
+    function checkAndSaveHistory() {
+        // आज की तारीख निकालें
+        let today = new Date().toLocaleDateString();
+
+        // लोकल स्टोरेज (मोबाइल की मेमोरी) से चेक करें कि आखिरी क्लेम कब हुआ था
+        let lastClaimDate = localStorage.getItem("lastCoinClaimDate");
+
+        if (lastClaimDate === today) {
+            // अगर आज की तारीख पहले से सेव है
+            alert("हिस्ट्री चेक: आप आज के कॉइन पहले ही क्लेम कर चुके हैं!");
+        } else {
+            // अगर आज क्लेम नहीं हुआ है, तो आज की तारीख डेटाबेस (स्टोरेज) में सेव करें
+            localStorage.setItem("lastCoinClaimDate", today);
+            alert("सक्सेस! आपके आज के कॉइन क्लेम हो गए हैं और हिस्ट्री में सेव हो गए हैं।");
+        }
     }
 </script>
 
