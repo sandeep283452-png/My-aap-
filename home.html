@@ -293,7 +293,6 @@ function googleTranslateElementInit() {
         "B7N1X", "M3V6Q", "K9Z4R", "L5J8T", "X2C7P", "Y1G4W", "F8H2M", "P6D9B", "V3K5N", "N7Q1Z",
         "J4M8R", "T9L2W", "C5V6P", "R1B3N", "Z8K4X", "G2J7M", "D6F9T", "W3H5C", "H7P1V", "B4N8X",
         "M9V2Q", "K5Z6R", "L1J3T", "X8C9P", "Y4G7W", "F2H5M", "P7D1B", "V9K4N", "N3Q8Z", "J6M1R"
-        // (कन्फर्मेशन के लिए बाकी keys पहले की तरह काम करेंगी)
     ];
 
     // --- 3-LINE MENU TOGGLE LOGIC ---
@@ -411,13 +410,6 @@ function googleTranslateElementInit() {
             return;
         }
 
-        // To make testing easy assuming VALID_KEYS contains your codes
-        // If not in array, show error.
-        /* if (!VALID_KEYS.includes(keyInput)) {
-            showCustomAlert("❌ Invalid Key", "आपने गलत कोड डाला है। कृपया एडमिन से मिला सही कोड डालें!");
-            return;
-        } */
-
         let usedKeys = JSON.parse(localStorage.getItem("used_keys") || "[]");
         if (usedKeys.includes(keyInput)) {
             showCustomAlert("⚠️ Used Key", "यह कोड आप पहले ही इस्तेमाल कर चुके हैं!");
@@ -508,16 +500,21 @@ function googleTranslateElementInit() {
         }
     }
 
-    // --- Spin Wheel Logic ---
+    // --- Spin Wheel Logic (Updated with 800-spin Jackpot Logic) ---
     let currentRotation = 0;
     const slices = [5, 0, 10, 200, 50, 0, 300, 400]; 
+    // इंडेक्स (Index): 0=5, 1=TryAgain, 2=10, 3=200, 4=50, 5=TryAgain, 6=300, 7=400
 
     function updateSpinUI() {
         let today = new Date().toLocaleDateString();
         let spinDate = localStorage.getItem("spinDate");
+        
+        // अगर नया दिन है तो स्पिन और विन/लॉस का डेटा रीसेट करें
         if(spinDate !== today) {
             localStorage.setItem("spinDate", today);
-            localStorage.setItem("spinsLeft", "5"); // सिर्फ 5 स्पिन मिलेंगे (Only 5 spins)
+            localStorage.setItem("spinsLeft", "5"); // डेली 5 स्पिन
+            localStorage.setItem("todayWins", "0"); // आज कितनी बार कॉइन जीते (Max 3)
+            localStorage.setItem("todayFails", "0"); // आज कितनी बार Try Again आया (Max 2)
         }
         let left = parseInt(localStorage.getItem("spinsLeft")) || 0;
         document.getElementById("spins-left-text").innerText = "Spins Left Today: " + left;
@@ -533,46 +530,97 @@ function googleTranslateElementInit() {
         let btn = document.getElementById("spinBtn");
         btn.disabled = true;
 
+        // स्पिन कम करें
         left--;
         localStorage.setItem("spinsLeft", left);
-        updateSpinUI();
+        updateSpinUI(); // UI अपडेट करें
 
+        // लाइफटाइम स्पिन काउंट करें
         let totalSpins = parseInt(localStorage.getItem("totalSpinsLifetime")) || 0;
         totalSpins++;
         localStorage.setItem("totalSpinsLifetime", totalSpins);
 
+        // आज के विन और लॉस का डेटा लें
+        let todayWins = parseInt(localStorage.getItem("todayWins")) || 0;
+        let todayFails = parseInt(localStorage.getItem("todayFails")) || 0;
+
         let randomSlice;
-        if (totalSpins < 700) {
-            const safeIndices = [0, 1, 2, 4, 5];
-            randomSlice = safeIndices[Math.floor(Math.random() * safeIndices.length)];
-        } else {
-            let rng = Math.random(); 
-            if (rng < 0.01) {
-                const bigIndices = [3, 6, 7];
-                randomSlice = bigIndices[Math.floor(Math.random() * bigIndices.length)];
-            } else {
-                const safeIndices = [0, 1, 2, 4, 5];
-                randomSlice = safeIndices[Math.floor(Math.random() * safeIndices.length)];
+
+        // --- 1% जैकपॉट लॉजिक (800 स्पिन के बाद) ---
+        let isJackpot = false;
+        if (totalSpins >= 800) {
+            // 800 स्पिन के बाद सिर्फ 1% (0.01) चांस है बड़े कॉइन मिलने का
+            if (Math.random() < 0.01) { 
+                isJackpot = true;
             }
         }
 
+        if (isJackpot) {
+            // जैकपॉट लगा! 50, 200, 300, या 400 कॉइन में से कुछ मिलेगा
+            const bigIndices = [3, 4, 6, 7]; 
+            randomSlice = bigIndices[Math.floor(Math.random() * bigIndices.length)];
+            todayWins++; // इसे भी जीत में गिनेंगे
+        } 
+        else {
+            // --- नार्मल लॉजिक (3 बार 5/10 कॉइन और 2 बार Try Again) ---
+            
+            let forceWin = false;
+            let forceFail = false;
+
+            // अगर आज के 2 'Try Again' पूरे हो चुके हैं, तो जबरदस्ती जिताओ
+            if (todayFails >= 2) {
+                forceWin = true;
+            }
+            // अगर आज की 3 जीत पूरी हो चुकी हैं, तो जबरदस्ती 'Try Again' लाओ
+            else if (todayWins >= 3) {
+                forceFail = true;
+            }
+
+            let chooseWin;
+            if (forceWin) {
+                chooseWin = true;
+            } else if (forceFail) {
+                chooseWin = false;
+            } else {
+                // अगर दोनों में लिमिट बची है, तो रैंडम तय करो (60% चांस जीतने का)
+                chooseWin = Math.random() < 0.6; 
+            }
+
+            if (chooseWin) {
+                // जीतने वाले स्लाइस (सिर्फ 5 और 10 कॉइन)
+                const winIndices = [0, 2]; 
+                randomSlice = winIndices[Math.floor(Math.random() * winIndices.length)];
+                todayWins++;
+            } else {
+                // हारने वाले स्लाइस (Try Again)
+                const failIndices = [1, 5]; 
+                randomSlice = failIndices[Math.floor(Math.random() * failIndices.length)];
+                todayFails++;
+            }
+        }
+
+        // नया डेटा सेव करें
+        localStorage.setItem("todayWins", todayWins);
+        localStorage.setItem("todayFails", todayFails);
+
+        // व्हील घुमाने का एनिमेशन
         let extraSpins = 5 * 360; 
         let targetAngle = 360 - (22.5 + randomSlice * 45); 
         let remainder = currentRotation % 360;
         let angleToAdd = targetAngle - remainder;
         
         if (angleToAdd <= 0) angleToAdd += 360; 
-        
         currentRotation += extraSpins + angleToAdd;
 
         let wheel = document.getElementById("spinWheel");
         wheel.style.transform = `rotate(${currentRotation}deg)`;
 
+        // 4 सेकंड बाद रिजल्ट दिखाएं
         setTimeout(() => {
             btn.disabled = false;
             let prize = slices[randomSlice];
             if(prize > 0) {
-                // Update via DB function
+                // डेटाबेस/हिस्ट्री में जोड़ें
                 इतिहास_जोड़ें(prize, 'Spin & Win Reward', 'स्पिन और जीत इनाम');
                 showCustomAlert("🎉 You Won!", `बधाई हो! आपको ${prize} Coins मिले हैं।`);
             } else {
