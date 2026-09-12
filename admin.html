@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EarnPro Admin Panel</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f4f7f6; 
+            padding: 15px; 
+            margin: 0;
+        }
+        .container { 
+            max-width: 500px; 
+            margin: auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        }
+        h2 { text-align: center; color: #2c3e50; margin-top: 0; }
+        
+        .section { 
+            margin-top: 25px; 
+            padding: 15px; 
+            background: #fdfefe; 
+            border: 1px solid #e1e8ed; 
+            border-radius: 8px; 
+        }
+        .section h3 { margin-top: 0; color: #34495e; font-size: 18px; border-bottom: 2px solid #3498db; padding-bottom: 5px; display: inline-block;}
+        
+        input { 
+            width: 100%; 
+            margin-bottom: 12px; 
+            padding: 12px; 
+            border: 1px solid #ccd1d1; 
+            border-radius: 6px; 
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+        .btn-primary { 
+            width: 100%; 
+            padding: 12px; 
+            background: #27ae60; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold;
+        }
+        .btn-primary:hover { background: #219150; }
+        
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { 
+            background: #f8f9f9; 
+            margin-bottom: 10px; 
+            padding: 12px; 
+            border-left: 5px solid #3498db; 
+            border-radius: 4px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        
+        .btn-small { 
+            padding: 6px 12px; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 13px; 
+        }
+        .btn-delete { background: #e74c3c; }
+        .btn-delete:hover { background: #c0392b; }
+        .btn-approve { background: #f39c12; }
+        .btn-approve:hover { background: #d68910; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>⚙️ EarnPro Admin</h2>
+        
+        <!-- टास्क मैनेजमेंट सेक्शन -->
+        <div class="section">
+            <h3>📌 नया टास्क जोड़ें</h3>
+            <input type="text" id="taskName" placeholder="टास्क का नाम (उदा. YouTube Subscribe)">
+            <input type="number" id="taskCoins" placeholder="रिवॉर्ड कॉइन्स (उदा. 50)">
+            <button class="btn-primary" onclick="addTask()">टास्क पब्लिश करें</button>
+        </div>
+
+        <div class="section">
+            <h3>📋 एक्टिव टास्क</h3>
+            <ul id="taskList"></ul>
+        </div>
+
+        <!-- विड्रॉल मैनेजमेंट सेक्शन -->
+        <div class="section">
+            <h3>💸 पेंडिंग विड्रॉल</h3>
+            <ul id="withdrawList"></ul>
+        </div>
+    </div>
+
+    <script>
+        // पेज लोड होते ही डेटा दिखाना
+        document.addEventListener("DOMContentLoaded", () => {
+            loadTasks();
+            loadWithdrawals();
+        });
+
+        // ================= TASKS LOGIC =================
+        function loadTasks() {
+            let tasks = JSON.parse(localStorage.getItem('earnpro_tasks')) || [];
+            let taskList = document.getElementById('taskList');
+            taskList.innerHTML = "";
+            
+            if(tasks.length === 0) {
+                taskList.innerHTML = "<li style='border-left-color:#bdc3c7;'>कोई एक्टिव टास्क नहीं है।</li>";
+            }
+
+            tasks.forEach((task, index) => {
+                taskList.innerHTML += `
+                    <li>
+                        <span><strong>${task.name}</strong> <br><small>🪙 ${task.coins} Coins</small></span>
+                        <button class="btn-small btn-delete" onclick="deleteTask(${index})">डिलीट</button>
+                    </li>`;
+            });
+        }
+
+        function addTask() {
+            let name = document.getElementById('taskName').value;
+            let coins = document.getElementById('taskCoins').value;
+            
+            if(name.trim() === "" || coins.trim() === "") { 
+                alert("कृपया टास्क का नाम और कॉइन्स भरें!"); 
+                return; 
+            }
+
+            let tasks = JSON.parse(localStorage.getItem('earnpro_tasks')) || [];
+            tasks.push({ name: name, coins: coins });
+            localStorage.setItem('earnpro_tasks', JSON.stringify(tasks));
+
+            document.getElementById('taskName').value = "";
+            document.getElementById('taskCoins').value = "";
+            loadTasks();
+        }
+
+        function deleteTask(index) {
+            let tasks = JSON.parse(localStorage.getItem('earnpro_tasks')) || [];
+            tasks.splice(index, 1);
+            localStorage.setItem('earnpro_tasks', JSON.stringify(tasks));
+            loadTasks();
+        }
+
+        // ================= WITHDRAWAL LOGIC =================
+        function loadWithdrawals() {
+            // (यह डेमो डेटा है। असली ऐप में यह डेटा यूज़र के पैनल से आएगा)
+            let withdrawals = JSON.parse(localStorage.getItem('earnpro_withdrawals'));
+            
+            // अगर पहली बार खोल रहे हैं, तो डेमो के लिए 2 रिक्वेस्ट डाल देते हैं
+            if(!withdrawals) {
+                withdrawals = [
+                    { user: "Ravi99", amount: "₹50", method: "Paytm" },
+                    { user: "Aman_OP", amount: "₹100", method: "UPI" }
+                ];
+                localStorage.setItem('earnpro_withdrawals', JSON.stringify(withdrawals));
+            }
+
+            let wList = document.getElementById('withdrawList');
+            wList.innerHTML = "";
+
+            if(withdrawals.length === 0) {
+                wList.innerHTML = "<li style='border-left-color:#bdc3c7;'>कोई पेंडिंग रिक्वेस्ट नहीं है।</li>";
+            }
+
+            withdrawals.forEach((req, index) => {
+                wList.innerHTML += `
+                    <li style="border-left-color: #f39c12;">
+                        <span>👤 <strong>${req.user}</strong> <br><small>💵 ${req.amount} (${req.method})</small></span>
+                        <button class="btn-small btn-approve" onclick="approvePayment(${index})">Approve</button>
+                    </li>`;
+            });
+        }
+
+        function approvePayment(index) {
+            let withdrawals = JSON.parse(localStorage.getItem('earnpro_withdrawals')) || [];
+            alert(`✅ ${withdrawals[index].user} का पेमेंट अप्रूव कर दिया गया है!`);
+            
+            // लिस्ट से रिक्वेस्ट हटा दें
+            withdrawals.splice(index, 1);
+            localStorage.setItem('earnpro_withdrawals', JSON.stringify(withdrawals));
+            
+            loadWithdrawals();
+        }
+    </script>
+</body>
+</html>
