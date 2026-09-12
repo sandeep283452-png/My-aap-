@@ -269,6 +269,23 @@
 </div>
 
 <script>
+    // --- Tabs Switch Logic (यही फंक्शन मिसिंग था) ---
+    function switchTab(tabId, element) {
+        // सारे टैब्स को हाईड (hide) करो
+        let tabs = document.querySelectorAll('.tab-content');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        
+        // सारे नेविगेशन बटन्स से 'active' क्लास हटाओ
+        let navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => item.classList.remove('active'));
+        
+        // जिस टैब पर क्लिक किया है, उसे दिखाओ
+        document.getElementById(tabId + '-section').classList.add('active');
+        
+        // जिस बटन पर क्लिक किया है, उसे 'active' बनाओ (ताकि हरा रंग आ जाये)
+        element.classList.add('active');
+    }
+
     // --- Utils & Alerts ---
     function showCustomAlert(title, message) {
         document.getElementById("custom-alert-title").innerText = title;
