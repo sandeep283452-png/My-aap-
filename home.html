@@ -26,7 +26,6 @@
         .card h3 { color: #ffffff; margin-bottom: 10px; font-size: 18px; }
         .card p { color: #d1e7dd; font-size: 14px; margin-bottom: 15px; }
         
-        /* Coin Balance updated Style */
         .coin-balance { font-size: 45px; font-weight: bold; color: #ffffff; margin: 15px 0; text-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         
         .action-btn { background: #b6ff40; color: #0f5132; border: none; padding: 14px 20px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; display: block; text-decoration: none; box-shadow: 0 4px 10px rgba(182, 255, 64, 0.3); }
@@ -49,31 +48,46 @@
         select:focus, input:focus { border-color: #166534; }
         label { color: white; font-size: 13px; font-weight: bold; display: block; text-align: left; margin-bottom: 5px; }
 
-        /* Spin Wheel Styles */
+        /* NEW PROPER SPIN WHEEL STYLES */
         .wheel-wrapper { position: relative; width: 260px; height: 260px; margin: 20px auto; }
-        .wheel { width: 100%; height: 100%; border-radius: 50%; border: 6px solid #0f5132; box-shadow: 0 0 15px rgba(0,0,0,0.2); transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); position: relative; overflow: hidden; background: conic-gradient(
-            #b6ff40 0deg 45deg, 
-            #ffffff 45deg 90deg, 
-            #b6ff40 90deg 135deg, 
-            #ffffff 135deg 180deg, 
-            #b6ff40 180deg 225deg, 
-            #ffffff 225deg 270deg, 
-            #b6ff40 270deg 315deg, 
-            #ffffff 315deg 360deg
-        ); }
+        .wheel { 
+            width: 100%; height: 100%; border-radius: 50%; border: 6px solid #0f5132; 
+            box-shadow: 0 0 15px rgba(0,0,0,0.2); 
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); 
+            position: relative; overflow: hidden; 
+            background: conic-gradient(
+                #b6ff40 0deg 45deg, 
+                #ffffff 45deg 90deg, 
+                #b6ff40 90deg 135deg, 
+                #ffffff 135deg 180deg, 
+                #b6ff40 180deg 225deg, 
+                #ffffff 225deg 270deg, 
+                #b6ff40 270deg 315deg, 
+                #ffffff 315deg 360deg
+            ); 
+        }
         
-        .wheel-slice { position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px; color: #0f5132; }
-        
-        .s1 { transform: rotate(0deg) skewY(45deg); }
-        .s2 { transform: rotate(45deg) skewY(45deg); }
-        .s3 { transform: rotate(90deg) skewY(45deg); }
-        .s4 { transform: rotate(135deg) skewY(45deg); }
-        .s5 { transform: rotate(180deg) skewY(45deg); }
-        .s6 { transform: rotate(225deg) skewY(45deg); }
-        .s7 { transform: rotate(270deg) skewY(45deg); }
-        .s8 { transform: rotate(315deg) skewY(45deg); }
-        
-        .wheel-text { transform: skewY(-45deg) rotate(22.5deg) translate(35px, -35px); position: absolute; text-align: center; line-height: 1.1; width: 60px; }
+        /* This places the text EXACTLY on the slices and rotates with them */
+        .slice-text {
+            position: absolute;
+            top: 0; left: 50%;
+            width: 60px; height: 50%; /* Goes from top to the center */
+            margin-left: -30px; /* Centers it perfectly */
+            transform-origin: 50% 100%; /* Pivot point is at the exact center of the wheel */
+            display: flex; justify-content: center; align-items: flex-start;
+            padding-top: 15px; /* Spacing from the edge */
+            font-weight: 900; font-size: 16px; color: #0f5132; text-align: center; line-height: 1.1;
+        }
+
+        /* 8 Slices - 45 degrees each */
+        .st1 { transform: rotate(22.5deg); }
+        .st2 { transform: rotate(67.5deg); color: #666; font-size: 14px; }
+        .st3 { transform: rotate(112.5deg); }
+        .st4 { transform: rotate(157.5deg); color: #d9534f; font-size: 18px; }
+        .st5 { transform: rotate(202.5deg); }
+        .st6 { transform: rotate(247.5deg); color: #666; font-size: 14px; }
+        .st7 { transform: rotate(292.5deg); color: #d9534f; font-size: 18px; }
+        .st8 { transform: rotate(337.5deg); color: #d9534f; font-size: 18px; }
 
         .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #ff3b30; z-index: 10; filter: drop-shadow(0 3px 3px rgba(0,0,0,0.3)); }
         
@@ -184,15 +198,15 @@
                 <div class="wheel-wrapper">
                     <div class="pointer"></div>
                     <div class="wheel" id="spinWheel">
-                        <!-- Updated slices with labels as per your request -->
-                        <div class="wheel-slice s1"><div class="wheel-text">5<br><span style="font-size:10px;">Coins</span></div></div>
-                        <div class="wheel-slice s2"><div class="wheel-text" style="color: #666; font-size:12px;">Try<br>Again</div></div>
-                        <div class="wheel-slice s3"><div class="wheel-text">10<br><span style="font-size:10px;">Coins</span></div></div>
-                        <div class="wheel-slice s4"><div class="wheel-text" style="color: #d9534f; font-size:16px;">200<br><span style="font-size:10px;">Coins</span></div></div>
-                        <div class="wheel-slice s5"><div class="wheel-text">5<br><span style="font-size:10px;">Coins</span></div></div>
-                        <div class="wheel-slice s6"><div class="wheel-text" style="color: #666; font-size:12px;">Try<br>Again</div></div>
-                        <div class="wheel-slice s7"><div class="wheel-text">10<br><span style="font-size:10px;">Coins</span></div></div>
-                        <div class="wheel-slice s8"><div class="wheel-text" style="color: #d9534f; font-size:16px;">400<br><span style="font-size:10px;">Coins</span></div></div>
+                        <!-- Updated HTML logic: Text is mapped perfectly to each slice -->
+                        <div class="slice-text st1">5<br><span style="font-size:10px;">Coins</span></div>
+                        <div class="slice-text st2">Try<br>Again</div>
+                        <div class="slice-text st3">10<br><span style="font-size:10px;">Coins</span></div>
+                        <div class="slice-text st4">200<br><span style="font-size:10px;">Coins</span></div>
+                        <div class="slice-text st5">50<br><span style="font-size:10px;">Coins</span></div>
+                        <div class="slice-text st6">Try<br>Again</div>
+                        <div class="slice-text st7">300<br><span style="font-size:10px;">Coins</span></div>
+                        <div class="slice-text st8">400<br><span style="font-size:10px;">Coins</span></div>
                     </div>
                     <button class="spin-btn" onclick="spinTheWheel()" id="spinBtn">SPIN</button>
                 </div>
@@ -203,7 +217,6 @@
         <div id="wallet-section" class="tab-content active">
             <div class="card">
                 <h3>Cash Magnet Wallet</h3>
-                <!-- Dollar completely removed, only Coins shown -->
                 <div class="coin-balance" id="wallet-balance">🪙 0</div>
                 <button class="action-btn" onclick="checkAndSaveHistory()" style="margin-top: 15px;">🎁 Daily Check-in</button>
             </div>
@@ -277,7 +290,6 @@
 
     function updateWalletUI() {
         let walletCoins = parseInt(localStorage.getItem("userCoins")) || 0;
-        // Dollar Logic is removed. Directly showing Coins.
         document.getElementById("wallet-balance").innerText = "🪙 " + walletCoins;
     }
 
@@ -387,12 +399,12 @@
         }
     }
 
-    // --- Spin Wheel Logic with Rigged Gamification ---
+    // --- Spin Wheel Logic with Rigged Gamification & Perfect Rotation ---
     let currentRotation = 0;
     
-    // Index Mapping for slices: 
-    // 0: 5 Coins, 1: Try Again, 2: 10 Coins, 3: 200 Coins, 4: 5 Coins, 5: Try Again, 6: 10 Coins, 7: 400 Coins
-    const slices = [5, 0, 10, 200, 5, 0, 10, 400]; 
+    // Index Mapping (0 to 7): 
+    // 0: 5,  1: Try Again,  2: 10,  3: 200,  4: 50,  5: Try Again,  6: 300,  7: 400
+    const slices = [5, 0, 10, 200, 50, 0, 300, 400]; 
 
     function updateSpinUI() {
         let today = new Date().toLocaleDateString();
@@ -415,44 +427,43 @@
         let btn = document.getElementById("spinBtn");
         btn.disabled = true;
 
-        // Decrease daily count
         left--;
         localStorage.setItem("spinsLeft", left);
         updateSpinUI();
 
-        // Track Lifetime Spins for GAMIFICATION (700 rule)
         let totalSpins = parseInt(localStorage.getItem("totalSpinsLifetime")) || 0;
         totalSpins++;
         localStorage.setItem("totalSpinsLifetime", totalSpins);
 
         let randomSlice;
 
-        // Gamification Logic (Rigged Selection)
+        // Gamification Logic (Rigged Selection - 99% Small, 1% Big after 700)
         if (totalSpins < 700) {
-            // Cannot win 200 or 400 before 700 spins.
-            // Pick from safe indices: 0 (5), 1 (Try Again), 2 (10), 4 (5), 5 (Try Again), 6 (10)
-            const safeIndices = [0, 1, 2, 4, 5, 6];
+            // Safe indices only: 0 (5), 1 (Try), 2 (10), 4 (50), 5 (Try)
+            const safeIndices = [0, 1, 2, 4, 5];
             randomSlice = safeIndices[Math.floor(Math.random() * safeIndices.length)];
         } else {
-            // After 700 spins: 99% chance for small/zero, 1% chance for big
             let rng = Math.random(); 
             if (rng < 0.01) {
-                // 1% Big Prize (200 or 400) - Index 3 or 7
-                const bigIndices = [3, 7];
+                // 1% Big Prize (200, 300, 400)
+                const bigIndices = [3, 6, 7];
                 randomSlice = bigIndices[Math.floor(Math.random() * bigIndices.length)];
             } else {
                 // 99% Small/Zero
-                const safeIndices = [0, 1, 2, 4, 5, 6];
+                const safeIndices = [0, 1, 2, 4, 5];
                 randomSlice = safeIndices[Math.floor(Math.random() * safeIndices.length)];
             }
         }
 
-        // Calculate rotation based on selected rigged slice
-        let sliceAngle = 360 / 8; // 45 degrees
-        let stopAngle = (randomSlice * sliceAngle) + (sliceAngle / 2);
+        // Perfect Math for pointing the specific slice to the top needle!
+        let extraSpins = 5 * 360; // 5 full rounds of spinning
+        let targetAngle = 360 - (22.5 + randomSlice * 45); // Where the chosen text aligns with the pointer
+        let remainder = currentRotation % 360;
+        let angleToAdd = targetAngle - remainder;
         
-        let extraSpins = 5 * 360; // Spin 5 times visually before stopping
-        currentRotation += extraSpins + (360 - stopAngle);
+        if (angleToAdd <= 0) angleToAdd += 360; 
+        
+        currentRotation += extraSpins + angleToAdd;
 
         let wheel = document.getElementById("spinWheel");
         wheel.style.transform = `rotate(${currentRotation}deg)`;
