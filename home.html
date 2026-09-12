@@ -192,7 +192,7 @@
             </div>
         </div>
 
-        <!-- SPIN WHEEL SECTION (Updated to 5 Spins) -->
+        <!-- SPIN WHEEL SECTION -->
         <div id="spin-section" class="tab-content">
             <div class="card">
                 <h3>🎡 Spin & Win</h3>
@@ -220,10 +220,8 @@
             <div class="card">
                 <h3>Cash Magnet Wallet</h3>
                 <div class="coin-balance" id="wallet-balance">🪙 0</div>
-                <!-- Daily Check-in Button Has Been Removed Here -->
             </div>
             
-            <!-- DATABASE & HISTORY (नया सिस्टम जहाँ कॉइन्स का रिकॉर्ड सेव रहेगा) -->
             <div class="card" style="text-align: left; padding: 15px;">
                 <h3 style="text-align: center; margin-bottom: 15px;">📜 Transaction History</h3>
                 <div id="history-list" style="max-height: 250px; overflow-y: auto;">
@@ -277,7 +275,6 @@
     </div>
 </div>
 
-<!-- Google Translate Widget Script -->
 <script type="text/javascript">
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
@@ -286,16 +283,34 @@ function googleTranslateElementInit() {
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <script>
-    // --- 250 SECRET VALID KEYS ---
+    // --- 240 USER PROVIDED SECRET VALID KEYS ---
     const VALID_KEYS = [
         "QW8X2", "B9M1P", "K4V7N", "L2C5Z", "X6J8R", "Y3H9T", "F5D4M", "P1G7W", "V8K2B", "N9X4C",
         "J7L1Z", "M5Q3R", "T2H6W", "C8V9P", "R4B5N", "Z1K7X", "G6J2M", "D9F3T", "W4L8C", "H2P5V",
         "B7N1X", "M3V6Q", "K9Z4R", "L5J8T", "X2C7P", "Y1G4W", "F8H2M", "P6D9B", "V3K5N", "N7Q1Z",
         "J4M8R", "T9L2W", "C5V6P", "R1B3N", "Z8K4X", "G2J7M", "D6F9T", "W3H5C", "H7P1V", "B4N8X",
-        "M9V2Q", "K5Z6R", "L1J3T", "X8C9P", "Y4G7W", "F2H5M", "P7D1B", "V9K4N", "N3Q8Z", "J6M1R"
+        "M9V2Q", "K5Z6R", "L1J3T", "X8C9P", "Y4G7W", "F2H5M", "P7D1B", "V9K4N", "N3Q8Z", "J6M1R",
+        "T5L9W", "C2V4P", "R8B7N", "Z3K1X", "G9J5M", "D4F6T", "W1H8C", "H5P2V", "B9N4X", "M1V7Q",
+        "K6Z3R", "L8J9T", "X4C2P", "Y7G5W", "F1H6M", "P3D8B", "V5K9N", "N2Q4Z", "J9M5R", "T1L7W",
+        "C6V2P", "R3B9N", "Z5K8X", "G7J1M", "D2F4T", "W8H6C", "H4P9V", "B1N5X", "M6V3Q", "K2Z7R",
+        "L9J4T", "X5C8P", "Y2G1W", "F7H9M", "P4D2B", "V1K6N", "N8Q5Z", "J3M9R", "T6L4W", "C9V1P",
+        "R2B6N", "Z7K3X", "G4J8M", "D1F5T", "W5H2C", "H9P7V", "B6N2X", "M8V5Q", "K3Z1R", "L4J7T",
+        "X9C6P", "Y5G8W", "F2H1M", "P8D4B", "V6K3N", "N1Q9Z", "J5M2R", "T4L6W", "C7V8P", "R9B1N",
+        "Z2K5X", "G8J3M", "D5F7T", "W9H1C", "H3P4V", "B2N9X", "M4V8Q", "K1Z5R", "L7J2T", "X3C4P",
+        "Y8G6W", "F9H3M", "P2D7B", "V4K1N", "N6Q2Z", "J1M7R", "T8L3W", "C4V5P", "R5B2N", "Z9K6X",
+        "G3J9M", "D7F1T", "W2H4C", "H1P8V", "B5N6X", "M2V9Q", "K8Z4R", "L6J1T", "X7C3P", "Y9G2W",
+        "F4H8M", "P5D6B", "V2K7N", "N4Q3Z", "J8M4R", "T3L1W", "C1V9P", "R7B5N", "Z4K2X", "G1J6M",
+        "D8F3T", "W6H7C", "H5P1V", "B3N8X", "M7V4Q", "K5Z9R", "L2J6T", "X1C5P", "Y6G3W", "F3H7M",
+        "P9D1B", "V7K8N", "N5Q2Z", "J2M9R", "T7L5W", "C8V4P", "R6B1N", "Z1K9X", "G5J2M", "D9F6T",
+        "W4H3C", "H2P7V", "B8N1X", "M1V5Q", "K9Z2R", "L4J8T", "X6C7P", "Y3G9W", "F8H4M", "P1D2B",
+        "V5K6N", "N9Q7Z", "J4M3R", "T2L8W", "C5V1P", "R3B9N", "Z7K4X", "G8J5M", "D1F2T", "W9H6C",
+        "H7P3V", "B4N5X", "M6V1Q", "K2Z8R", "L9J7T", "X5C3P", "Y1G4W", "F7H8M", "P2D9B", "V3K1N",
+        "N8Q5Z", "J5M2R", "T6L9W", "C3V7P", "R1B4N", "Z9K6X", "G2J8M", "D4F1T", "W5H7C", "H8P2V",
+        "B1N6X", "M9V3Q", "K7Z5R", "L3J1T", "X8C4P", "Y2G6W", "F5H9M", "P4D8B", "V1K2N", "N7Q3Z",
+        "J9M4R", "T1L5W", "C6V2P", "R8B9N", "Z4K7X", "G3J1M", "D7F5T", "W2H8C", "H6P9V", "B5N2X",
+        "M3V8Q", "K1Z6R", "L8J4T", "X9C1P", "Y5G7W", "F6H2M", "P9D3B", "V4K5N", "N2Q8Z", "J7M1R"
     ];
 
-    // --- 3-LINE MENU TOGGLE LOGIC ---
     function toggleLanguageMenu() {
         let menu = document.getElementById("lang-menu");
         if (menu.style.display === "none" || menu.style.display === "") {
@@ -335,7 +350,6 @@ function googleTranslateElementInit() {
         document.getElementById("wallet-balance").innerText = "🪙 " + walletCoins;
     }
 
-    // --- इतिहास (HISTORY) DATABASE LOGIC ---
     function इतिहास_जोड़ें(रकम, स्रोत_en, स्रोत_hi) {
         let currentCoins = parseInt(localStorage.getItem("userCoins")) || 0;
         localStorage.setItem("userCoins", currentCoins + रकम);
@@ -387,43 +401,37 @@ function googleTranslateElementInit() {
         checkCompletedTasks();
     }
 
-    // BONUS CLAIM UPDATE
     document.getElementById("claim-btn").addEventListener("click", function() {
         localStorage.setItem("hasClaimedBonus", "true");
         इतिहास_जोड़ें(10, 'Signup Bonus', 'साइनअप बोनस'); 
         document.getElementById("bonus-modal").style.display = "none";
     });
 
-    // --- KEY VERIFICATION LOGIC (FIXED & SECURED) ---
+    // --- KEY VERIFICATION LOGIC ---
     function verifyKey(taskName, rewardAmount, taskEn, taskHi) {
         let keyInput = document.getElementById(`key-${taskName}`).value.trim();
         
-        // 1. चेक करो कि कोड डाला है या नहीं (खाली डब्बा)
         if (!keyInput) {
             showCustomAlert("Error", "कृपया अपना Secret Code डालें!");
             return;
         }
 
-        // 2. चेक करो कि क्या कोड उन असली कोड्स (VALID_KEYS) में से एक है?
         if (!VALID_KEYS.includes(keyInput)) {
             showCustomAlert("❌ Invalid Key", "यह कोड गलत है! कृपया सही Secret Code डालें।");
             return;
         }
 
-        // 3. चेक करो कि टास्क पहले ही तो पूरा नहीं हुआ
         if (localStorage.getItem(`${taskName}_completed`) === "true") {
             showCustomAlert("Alert", "आप यह टास्क पहले ही पूरा कर चुके हैं!");
             return;
         }
 
-        // 4. चेक करो कि क्या कोड पहले ही इस्तेमाल हो चुका है
         let usedKeys = JSON.parse(localStorage.getItem("used_keys") || "[]");
         if (usedKeys.includes(keyInput)) {
             showCustomAlert("⚠️ Used Key", "यह कोड आप पहले ही इस्तेमाल कर चुके हैं!");
             return;
         }
 
-        // Success - अब सब कुछ सही है, कोड असली है और नया है!
         usedKeys.push(keyInput);
         localStorage.setItem("used_keys", JSON.stringify(usedKeys));
         localStorage.setItem(`${taskName}_completed`, "true");
@@ -431,7 +439,6 @@ function googleTranslateElementInit() {
         let count = parseInt(localStorage.getItem(taskName + 'TaskCount')) || 0;
         localStorage.setItem(taskName + 'TaskCount', count + 1);
 
-        // Update Wallet & History
         इतिहास_जोड़ें(rewardAmount, taskEn + ' Reward', taskHi + ' इनाम');
 
         showCustomAlert("🎉 Success!", `कोड सही है! ${rewardAmount} Coins आपके वॉलेट में जुड़ गए हैं।`);
@@ -471,7 +478,6 @@ function googleTranslateElementInit() {
         }
     }
 
-    // --- Referral Logic ---
     function startReferralTimer() {
         let msg = "Download Cash Magnet App and earn! Click here: https://link.to.app";
         let waLink = "https://wa.me/?text=" + encodeURIComponent(msg);
@@ -507,7 +513,6 @@ function googleTranslateElementInit() {
         }
     }
 
-    // --- Spin Wheel Logic (Updated with 800-spin Jackpot Logic) ---
     let currentRotation = 0;
     const slices = [5, 0, 10, 200, 50, 0, 300, 400]; 
     
@@ -611,12 +616,11 @@ function googleTranslateElementInit() {
                 इतिहास_जोड़ें(prize, 'Spin & Win Reward', 'स्पिन और जीत इनाम');
                 showCustomAlert("🎉 You Won!", `बधाई हो! आपको ${prize} Coins मिले हैं।`);
             } else {
-                showCustomAlert("Oops!", "Try Again! कोई बात नहीं, अगली बार बेहतर किस्मत।");
+                showCustomAlert("Oops!", "Try Again! कोई बात অব্যাহত रखें, अगली बार बेहतर किस्मत।");
             }
         }, 4000);
     }
 
-    // --- Withdrawal Logic ---
     function openWithdrawModal() {
         let amountSelect = document.getElementById("withdraw-amount");
         let requiredCoins = parseInt(amountSelect.value); 
