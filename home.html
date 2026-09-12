@@ -7,14 +7,10 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* Background matching the image theme */
         body { background: linear-gradient(180deg, #e6faed 0%, #f4fdf8 50%, #ffffff 100%); display: flex; justify-content: center; height: 100vh; overflow: hidden; }
         
-        .app-frame { width: 100%; max-width: 400px; height: 100vh; position: relative; display: none; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); background: transparent; }
+        .app-frame { width: 100%; max-width: 400px; height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); background: transparent; }
         
-        #server-down-msg { display: none; width: 100%; max-width: 400px; height: 100vh; background: #fff; text-align: center; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
-        
-        /* Header - updated to transparent/white look */
         .header { background: white; color: #166534; padding: 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 10px; }
         .header h2 { font-weight: 800; font-size: 24px; }
         
@@ -26,21 +22,18 @@
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Cards matching dark green theme */
         .card { background: linear-gradient(135deg, #0f5132, #146c43); color: white; padding: 20px; border-radius: 20px; margin-bottom: 15px; box-shadow: 0 8px 15px rgba(20, 108, 67, 0.2); text-align: center; position: relative; overflow: hidden; }
         .card h3 { color: #ffffff; margin-bottom: 10px; font-size: 18px; }
         .card p { color: #d1e7dd; font-size: 14px; margin-bottom: 15px; }
         
-        .coin-balance { font-size: 40px; font-weight: bold; color: #ffffff; margin: 15px 0; }
+        /* Coin Balance updated Style */
+        .coin-balance { font-size: 45px; font-weight: bold; color: #ffffff; margin: 15px 0; text-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         
-        /* Buttons matching light green theme */
         .action-btn { background: #b6ff40; color: #0f5132; border: none; padding: 14px 20px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; display: block; text-decoration: none; box-shadow: 0 4px 10px rgba(182, 255, 64, 0.3); }
         .action-btn:hover { transform: scale(0.98); }
         
-        /* Specific card overrides */
         .refer-card { background: linear-gradient(135deg, #198754, #20c997); }
         
-        /* Bottom Navigation */
         .bottom-nav { position: absolute; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 5px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); border-top-left-radius: 25px; border-top-right-radius: 25px; }
         .nav-item { text-align: center; color: #a3a3a3; cursor: pointer; flex: 1; padding: 5px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .nav-item .icon { font-size: 24px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; }
@@ -48,12 +41,10 @@
         .nav-item.active { color: #166534; }
         .nav-item.active .icon { background: #166534; color: #b6ff40; }
         
-        /* Modals */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(3px); }
         .modal-content { background: white; padding: 30px 20px; border-radius: 24px; text-align: center; width: 85%; max-width: 350px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
-        /* Inputs & Selects */
         select, input[type="text"] { width: 100%; padding: 14px; margin-top: 8px; margin-bottom: 15px; border-radius: 12px; border: 2px solid #e2e8f0; font-weight: bold; font-size: 15px; outline: none; background: #f8fafc; color: #334155; }
         select:focus, input:focus { border-color: #166534; }
         label { color: white; font-size: 13px; font-weight: bold; display: block; text-align: left; margin-bottom: 5px; }
@@ -71,9 +62,8 @@
             #ffffff 315deg 360deg
         ); }
         
-        .wheel-slice { position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; color: #0f5132; }
+        .wheel-slice { position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px; color: #0f5132; }
         
-        /* Slices text positioning */
         .s1 { transform: rotate(0deg) skewY(45deg); }
         .s2 { transform: rotate(45deg) skewY(45deg); }
         .s3 { transform: rotate(90deg) skewY(45deg); }
@@ -83,7 +73,7 @@
         .s7 { transform: rotate(270deg) skewY(45deg); }
         .s8 { transform: rotate(315deg) skewY(45deg); }
         
-        .wheel-text { transform: skewY(-45deg) rotate(22.5deg) translate(30px, -30px); position: absolute; text-align: center; line-height: 1.2; width: 60px; }
+        .wheel-text { transform: skewY(-45deg) rotate(22.5deg) translate(35px, -35px); position: absolute; text-align: center; line-height: 1.1; width: 60px; }
 
         .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #ff3b30; z-index: 10; filter: drop-shadow(0 3px 3px rgba(0,0,0,0.3)); }
         
@@ -137,7 +127,6 @@
     </div>
 </div>
 
-
 <div class="app-frame" id="main-app">
     <div class="header">
         <h2>Cash Magnet</h2>
@@ -149,7 +138,7 @@
     <div class="content-area">
         
         <!-- TASKS SECTION -->
-        <div id="tasks-section" class="tab-content active">
+        <div id="tasks-section" class="tab-content">
             <div class="card refer-card">
                 <h3>📢 Refer & Earn</h3>
                 <p>अपने दोस्तों को रेफर करें और 48 घंटे बाद पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 200 Coins</span></p>
@@ -195,14 +184,15 @@
                 <div class="wheel-wrapper">
                     <div class="pointer"></div>
                     <div class="wheel" id="spinWheel">
-                        <div class="wheel-slice s1"><div class="wheel-text">5<br>Coins</div></div>
-                        <div class="wheel-slice s2"><div class="wheel-text" style="color: #999;">Try<br>Again</div></div>
-                        <div class="wheel-slice s3"><div class="wheel-text">10<br>Coins</div></div>
-                        <div class="wheel-slice s4"><div class="wheel-text" style="color: #999;">Try<br>Again</div></div>
-                        <div class="wheel-slice s5"><div class="wheel-text">5<br>Coins</div></div>
-                        <div class="wheel-slice s6"><div class="wheel-text" style="color: #999;">Try<br>Again</div></div>
-                        <div class="wheel-slice s7"><div class="wheel-text">10<br>Coins</div></div>
-                        <div class="wheel-slice s8"><div class="wheel-text" style="color: #999;">Try<br>Again</div></div>
+                        <!-- Updated slices with labels as per your request -->
+                        <div class="wheel-slice s1"><div class="wheel-text">5<br><span style="font-size:10px;">Coins</span></div></div>
+                        <div class="wheel-slice s2"><div class="wheel-text" style="color: #666; font-size:12px;">Try<br>Again</div></div>
+                        <div class="wheel-slice s3"><div class="wheel-text">10<br><span style="font-size:10px;">Coins</span></div></div>
+                        <div class="wheel-slice s4"><div class="wheel-text" style="color: #d9534f; font-size:16px;">200<br><span style="font-size:10px;">Coins</span></div></div>
+                        <div class="wheel-slice s5"><div class="wheel-text">5<br><span style="font-size:10px;">Coins</span></div></div>
+                        <div class="wheel-slice s6"><div class="wheel-text" style="color: #666; font-size:12px;">Try<br>Again</div></div>
+                        <div class="wheel-slice s7"><div class="wheel-text">10<br><span style="font-size:10px;">Coins</span></div></div>
+                        <div class="wheel-slice s8"><div class="wheel-text" style="color: #d9534f; font-size:16px;">400<br><span style="font-size:10px;">Coins</span></div></div>
                     </div>
                     <button class="spin-btn" onclick="spinTheWheel()" id="spinBtn">SPIN</button>
                 </div>
@@ -210,12 +200,12 @@
         </div>
 
         <!-- WALLET SECTION -->
-        <div id="wallet-section" class="tab-content">
+        <div id="wallet-section" class="tab-content active">
             <div class="card">
                 <h3>Cash Magnet Wallet</h3>
-                <div class="coin-balance" id="wallet-balance">$0.00</div>
-                <p id="wallet-coins-text">0 coins available</p>
-                <button class="action-btn" onclick="checkAndSaveHistory()">🎁 Daily Check-in</button>
+                <!-- Dollar completely removed, only Coins shown -->
+                <div class="coin-balance" id="wallet-balance">🪙 0</div>
+                <button class="action-btn" onclick="checkAndSaveHistory()" style="margin-top: 15px;">🎁 Daily Check-in</button>
             </div>
         </div>
 
@@ -252,13 +242,13 @@
 
     <!-- BOTTOM NAV -->
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('tasks', this)">
+        <div class="nav-item" onclick="switchTab('tasks', this)">
             <span class="icon">✓</span><span class="label">Tasks</span>
         </div>
         <div class="nav-item" onclick="switchTab('spin', this)">
             <span class="icon">🎡</span><span class="label">Spin</span>
         </div>
-        <div class="nav-item" onclick="switchTab('wallet', this)">
+        <div class="nav-item active" onclick="switchTab('wallet', this)">
             <span class="icon">💳</span><span class="label">Wallet</span>
         </div>
         <div class="nav-item" onclick="switchTab('payment', this)">
@@ -279,7 +269,7 @@
         document.getElementById("custom-alert-modal").style.display = "none";
     }
 
-    // --- Init App --- (Time limit removed here)
+    // --- Init App ---
     window.onload = function() {
         document.getElementById("main-app").style.display = "flex"; 
         initAppLogic(); 
@@ -287,9 +277,8 @@
 
     function updateWalletUI() {
         let walletCoins = parseInt(localStorage.getItem("userCoins")) || 0;
-        let dollars = (walletCoins * 0.01).toFixed(2); // Just for display styling
-        document.getElementById("wallet-balance").innerText = "$" + dollars;
-        document.getElementById("wallet-coins-text").innerText = walletCoins + " coins available";
+        // Dollar Logic is removed. Directly showing Coins.
+        document.getElementById("wallet-balance").innerText = "🪙 " + walletCoins;
     }
 
     function initAppLogic() {
@@ -398,16 +387,19 @@
         }
     }
 
-    // --- Spin Wheel Logic ---
+    // --- Spin Wheel Logic with Rigged Gamification ---
     let currentRotation = 0;
-    const slices = [5, 0, 10, 0, 5, 0, 10, 0]; // 0 = Try Again. 8 slices.
+    
+    // Index Mapping for slices: 
+    // 0: 5 Coins, 1: Try Again, 2: 10 Coins, 3: 200 Coins, 4: 5 Coins, 5: Try Again, 6: 10 Coins, 7: 400 Coins
+    const slices = [5, 0, 10, 200, 5, 0, 10, 400]; 
 
     function updateSpinUI() {
         let today = new Date().toLocaleDateString();
         let spinDate = localStorage.getItem("spinDate");
         if(spinDate !== today) {
             localStorage.setItem("spinDate", today);
-            localStorage.setItem("spinsLeft", "10");
+            localStorage.setItem("spinsLeft", "10"); // Daily 10 spins
         }
         let left = parseInt(localStorage.getItem("spinsLeft")) || 0;
         document.getElementById("spins-left-text").innerText = "Spins Left Today: " + left;
@@ -423,22 +415,49 @@
         let btn = document.getElementById("spinBtn");
         btn.disabled = true;
 
-        // Decrease count
+        // Decrease daily count
         left--;
         localStorage.setItem("spinsLeft", left);
         updateSpinUI();
 
-        // Calculate rotation
-        let randomSlice = Math.floor(Math.random() * 8); 
+        // Track Lifetime Spins for GAMIFICATION (700 rule)
+        let totalSpins = parseInt(localStorage.getItem("totalSpinsLifetime")) || 0;
+        totalSpins++;
+        localStorage.setItem("totalSpinsLifetime", totalSpins);
+
+        let randomSlice;
+
+        // Gamification Logic (Rigged Selection)
+        if (totalSpins < 700) {
+            // Cannot win 200 or 400 before 700 spins.
+            // Pick from safe indices: 0 (5), 1 (Try Again), 2 (10), 4 (5), 5 (Try Again), 6 (10)
+            const safeIndices = [0, 1, 2, 4, 5, 6];
+            randomSlice = safeIndices[Math.floor(Math.random() * safeIndices.length)];
+        } else {
+            // After 700 spins: 99% chance for small/zero, 1% chance for big
+            let rng = Math.random(); 
+            if (rng < 0.01) {
+                // 1% Big Prize (200 or 400) - Index 3 or 7
+                const bigIndices = [3, 7];
+                randomSlice = bigIndices[Math.floor(Math.random() * bigIndices.length)];
+            } else {
+                // 99% Small/Zero
+                const safeIndices = [0, 1, 2, 4, 5, 6];
+                randomSlice = safeIndices[Math.floor(Math.random() * safeIndices.length)];
+            }
+        }
+
+        // Calculate rotation based on selected rigged slice
         let sliceAngle = 360 / 8; // 45 degrees
         let stopAngle = (randomSlice * sliceAngle) + (sliceAngle / 2);
         
-        let extraSpins = 5 * 360; // Spin 5 times before stopping
+        let extraSpins = 5 * 360; // Spin 5 times visually before stopping
         currentRotation += extraSpins + (360 - stopAngle);
 
         let wheel = document.getElementById("spinWheel");
         wheel.style.transform = `rotate(${currentRotation}deg)`;
 
+        // Show result after animation (4s)
         setTimeout(() => {
             btn.disabled = false;
             let prize = slices[randomSlice];
@@ -455,7 +474,6 @@
 
     // --- Withdrawal Logic ---
     function openWithdrawModal() {
-        // Validation Checks
         let amountSelect = document.getElementById("withdraw-amount");
         let requiredCoins = parseInt(amountSelect.value); 
         let currentCoins = parseInt(localStorage.getItem("userCoins")) || 0; 
@@ -474,13 +492,11 @@
             return;
         }
 
-        // Check if already pending
         if(localStorage.getItem("withdrawPending") === "true") {
             showCustomAlert("⏳ Request Pending", "आपकी पिछली विड्रॉल रिक्वेस्ट पहले से ही पेंडिंग है। कृपया 7 दिन का इंतज़ार करें।");
             return;
         }
 
-        // Open Modal
         document.getElementById("withdraw-modal").style.display = "flex";
     }
 
@@ -498,12 +514,10 @@
         let amount = document.getElementById("withdraw-amount").value;
         let method = document.getElementById("final-withdraw-method").value;
         
-        // Deduct Coins
         let currentCoins = parseInt(localStorage.getItem("userCoins")) || 0;
         localStorage.setItem("userCoins", currentCoins - parseInt(amount));
         updateWalletUI();
 
-        // Save Pending Status locally (shows "Pending 7 days" UI)
         let today = new Date().toLocaleDateString();
         localStorage.setItem("withdrawPending", "true");
         localStorage.setItem("w_amount", amount);
