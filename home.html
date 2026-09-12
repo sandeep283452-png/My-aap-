@@ -28,9 +28,14 @@
         
         .coin-balance { font-size: 45px; font-weight: bold; color: #ffffff; margin: 15px 0; text-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         
-        .action-btn { background: #b6ff40; color: #0f5132; border: none; padding: 14px 20px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; display: block; text-decoration: none; box-shadow: 0 4px 10px rgba(182, 255, 64, 0.3); }
+        .action-btn { background: #b6ff40; color: #0f5132; border: none; padding: 14px 20px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; display: block; text-decoration: none; box-shadow: 0 4px 10px rgba(182, 255, 64, 0.3); margin-bottom: 8px; }
         .action-btn:hover { transform: scale(0.98); }
         
+        .key-input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #b6ff40; background: rgba(255,255,255,0.1); color: white; font-weight: bold; text-align: center; margin-bottom: 10px; font-size: 15px; outline: none; }
+        .key-input::placeholder { color: #d1e7dd; opacity: 0.8; }
+        
+        .completed-msg { background: rgba(255, 255, 255, 0.2); padding: 12px; border-radius: 10px; font-weight: bold; color: #b6ff40; display: none; }
+
         .refer-card { background: linear-gradient(135deg, #198754, #20c997); }
         
         .bottom-nav { position: absolute; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 5px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); border-top-left-radius: 25px; border-top-right-radius: 25px; }
@@ -48,50 +53,13 @@
         select:focus, input:focus { border-color: #166534; }
         label { color: white; font-size: 13px; font-weight: bold; display: block; text-align: left; margin-bottom: 5px; }
 
-        /* PROPER SPIN WHEEL STYLES */
         .wheel-wrapper { position: relative; width: 260px; height: 260px; margin: 20px auto; }
-        .wheel { 
-            width: 100%; height: 100%; border-radius: 50%; border: 6px solid #0f5132; 
-            box-shadow: 0 0 15px rgba(0,0,0,0.2); 
-            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); 
-            position: relative; overflow: hidden; 
-            background: conic-gradient(
-                #b6ff40 0deg 45deg, 
-                #ffffff 45deg 90deg, 
-                #b6ff40 90deg 135deg, 
-                #ffffff 135deg 180deg, 
-                #b6ff40 180deg 225deg, 
-                #ffffff 225deg 270deg, 
-                #b6ff40 270deg 315deg, 
-                #ffffff 315deg 360deg
-            ); 
-        }
-        
-        .slice-text {
-            position: absolute;
-            top: 0; left: 50%;
-            width: 60px; height: 50%; 
-            margin-left: -30px; 
-            transform-origin: 50% 100%; 
-            display: flex; justify-content: center; align-items: flex-start;
-            padding-top: 15px; 
-            font-weight: 900; font-size: 16px; color: #0f5132; text-align: center; line-height: 1.1;
-        }
-
-        .st1 { transform: rotate(22.5deg); }
-        .st2 { transform: rotate(67.5deg); color: #666; font-size: 14px; }
-        .st3 { transform: rotate(112.5deg); }
-        .st4 { transform: rotate(157.5deg); color: #d9534f; font-size: 18px; }
-        .st5 { transform: rotate(202.5deg); }
-        .st6 { transform: rotate(247.5deg); color: #666; font-size: 14px; }
-        .st7 { transform: rotate(292.5deg); color: #d9534f; font-size: 18px; }
-        .st8 { transform: rotate(337.5deg); color: #d9534f; font-size: 18px; }
-
+        .wheel { width: 100%; height: 100%; border-radius: 50%; border: 6px solid #0f5132; box-shadow: 0 0 15px rgba(0,0,0,0.2); transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); position: relative; overflow: hidden; background: conic-gradient(#b6ff40 0deg 45deg, #ffffff 45deg 90deg, #b6ff40 90deg 135deg, #ffffff 135deg 180deg, #b6ff40 180deg 225deg, #ffffff 225deg 270deg, #b6ff40 270deg 315deg, #ffffff 315deg 360deg); }
+        .slice-text { position: absolute; top: 0; left: 50%; width: 60px; height: 50%; margin-left: -30px; transform-origin: 50% 100%; display: flex; justify-content: center; align-items: flex-start; padding-top: 15px; font-weight: 900; font-size: 16px; color: #0f5132; text-align: center; line-height: 1.1; }
+        .st1 { transform: rotate(22.5deg); } .st2 { transform: rotate(67.5deg); color: #666; font-size: 14px; } .st3 { transform: rotate(112.5deg); } .st4 { transform: rotate(157.5deg); color: #d9534f; font-size: 18px; } .st5 { transform: rotate(202.5deg); } .st6 { transform: rotate(247.5deg); color: #666; font-size: 14px; } .st7 { transform: rotate(292.5deg); color: #d9534f; font-size: 18px; } .st8 { transform: rotate(337.5deg); color: #d9534f; font-size: 18px; }
         .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #ff3b30; z-index: 10; filter: drop-shadow(0 3px 3px rgba(0,0,0,0.3)); }
-        
         .spin-btn { background: #b6ff40; border: 4px solid #0f5132; color: #0f5132; font-weight: bold; width: 70px; height: 70px; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); cursor: pointer; z-index: 5; font-size: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .spin-btn:active { transform: translate(-50%, -50%) scale(0.95); }
-
         .pending-box { background: rgba(255, 193, 7, 0.2); border: 1px solid #ffc107; padding: 15px; border-radius: 12px; margin-top: 15px; display: none; }
         .pending-box h4 { color: #ffb300; margin-bottom: 5px; }
         .pending-box p { color: white; font-size: 13px; margin: 0; }
@@ -99,7 +67,6 @@
 </head>
 <body>
 
-<!-- Bonus Modal (Changed to 10 Coins) -->
 <div id="bonus-modal" class="modal-overlay">
     <div class="modal-content">
         <h2 style="font-size: 24px; color: #0f5132;">🎉 Congratulations! 🎉</h2>
@@ -109,7 +76,6 @@
     </div>
 </div>
 
-<!-- Custom Alert Modal -->
 <div id="custom-alert-modal" class="modal-overlay">
     <div class="modal-content">
         <h2 id="custom-alert-title" style="font-size: 20px; color: #0f5132; margin-bottom: 10px;">Message</h2>
@@ -118,22 +84,18 @@
     </div>
 </div>
 
-<!-- Withdrawal Form Modal -->
 <div id="withdraw-modal" class="modal-overlay">
     <div class="modal-content" style="background: linear-gradient(135deg, #0f5132, #146c43);">
         <h2 style="font-size: 20px; color: white; margin-bottom: 5px;">Withdraw Details</h2>
         <p style="color: #d1e7dd; font-size: 13px; margin-bottom: 20px;">अपना पेमेंट तरीका और डिटेल्स दर्ज करें</p>
-        
         <label>Payment Method:</label>
         <select id="final-withdraw-method">
             <option value="UPI">UPI ID</option>
             <option value="Bank">Bank Account (A/C + IFSC)</option>
             <option value="Paytm">Paytm Number</option>
         </select>
-
         <label>Enter Details:</label>
         <input type="text" id="withdraw-details" placeholder="ex: 9876543210@ybl or A/C details" required>
-        
         <button onclick="submitWithdrawal()" class="action-btn" style="margin-top: 10px;">Submit Request</button>
         <button onclick="closeWithdrawModal()" class="action-btn" style="background: transparent; border: 2px solid #b6ff40; color: #b6ff40; margin-top: 10px;">Cancel</button>
     </div>
@@ -153,36 +115,59 @@
         <div id="tasks-section" class="tab-content">
             <div class="card refer-card">
                 <h3>📢 Refer & Earn</h3>
-                <p>अपने दोस्तों को रेफर करें और 48 घंटे बाद पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 200 Coins</span></p>
+                <p>अपने दोस्तों को रेफर करें और 48 घंटे बाद पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 50 Coins</span></p>
                 <button onclick="startReferralTimer()" class="action-btn" style="background: white; color: #198754;">📲 Share on WhatsApp</button>
                 <p id="referral-status" style="font-size: 13px; font-weight: bold; color: #b6ff40; margin-top: 10px; display: none;">⏳ 48 घंटे का टाइमर चल रहा है...</p>
             </div>
             
-            <div class="card">
+            <div class="card" id="card-daily">
                 <h3>📝 Daily Task 1</h3>
-                <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 50 Coins</span></p>
-                <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20my%20Daily%20Task%201" class="action-btn" target="_blank" onclick="trackTask('daily')">📲 Get Task on WhatsApp</a>
+                <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 100 Coins</span></p>
+                <div id="daily-action-area">
+                    <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20my%20Daily%20Task%201" class="action-btn" target="_blank" style="background: white; color: #0f5132;">1. Get Task on WhatsApp</a>
+                    <input type="text" id="key-daily" class="key-input" placeholder="Enter Secret Code">
+                    <button onclick="verifyKey('daily', 100)" class="action-btn">2. Verify & Claim Coins</button>
+                </div>
+                <div id="daily-completed" class="completed-msg">✅ Task Completed</div>
             </div>
             
-            <div class="card" id="card-t2" style="opacity: 0.7;">
+            <div class="card" id="card-premium1" style="opacity: 0.7;">
                 <h3>🔒 Premium Task 1</h3>
                 <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 250 Coins</span></p>
-                <button id="btn-t2" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 20px; border-radius: 12px; border: none; font-weight: bold; width: 100%;">🔒 5 दिन बाद खुलेगा</button>
-                <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20Premium%20Task%201" id="link-t2" class="action-btn" style="display: none;" target="_blank" onclick="trackTask('premium')">📲 Get Task</a>
+                <button id="btn-premium1-lock" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 20px; border-radius: 12px; border: none; font-weight: bold; width: 100%;">🔒 5 दिन बाद खुलेगा</button>
+                
+                <div id="premium1-action-area" style="display: none;">
+                    <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20Premium%20Task%201" class="action-btn" target="_blank" style="background: white; color: #0f5132;">1. Get Task on WhatsApp</a>
+                    <input type="text" id="key-premium1" class="key-input" placeholder="Enter Secret Code">
+                    <button onclick="verifyKey('premium1', 250)" class="action-btn">2. Verify & Claim Coins</button>
+                </div>
+                <div id="premium1-completed" class="completed-msg">✅ Task Completed</div>
             </div>
 
-            <div class="card" id="card-t3" style="opacity: 0.7;">
+            <div class="card" id="card-premium2" style="opacity: 0.7;">
                 <h3>🔒 Premium Task 2</h3>
                 <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 300 Coins</span></p>
-                <button id="btn-t3" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 20px; border-radius: 12px; border: none; font-weight: bold; width: 100%;">🔒 5 दिन बाद खुलेगा</button>
-                <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20Premium%20Task%202" id="link-t3" class="action-btn" style="display: none;" target="_blank" onclick="trackTask('premium')">📲 Get Task</a>
+                <button id="btn-premium2-lock" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 20px; border-radius: 12px; border: none; font-weight: bold; width: 100%;">🔒 5 दिन बाद खुलेगा</button>
+                
+                <div id="premium2-action-area" style="display: none;">
+                    <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20Premium%20Task%202" class="action-btn" target="_blank" style="background: white; color: #0f5132;">1. Get Task on WhatsApp</a>
+                    <input type="text" id="key-premium2" class="key-input" placeholder="Enter Secret Code">
+                    <button onclick="verifyKey('premium2', 300)" class="action-btn">2. Verify & Claim Coins</button>
+                </div>
+                <div id="premium2-completed" class="completed-msg">✅ Task Completed</div>
             </div>
 
-            <div class="card" id="card-t4" style="opacity: 0.7;">
+            <div class="card" id="card-mega" style="opacity: 0.7;">
                 <h3>🔒 Mega Task</h3>
                 <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 400 Coins</span></p>
-                <button id="btn-t4" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 20px; border-radius: 12px; border: none; font-weight: bold; width: 100%;">🔒 5 दिन बाद खुलेगा</button>
-                <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20Mega%20Task" id="link-t4" class="action-btn" style="display: none;" target="_blank" onclick="trackTask('mega')">📲 Get Task</a>
+                <button id="btn-mega-lock" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 20px; border-radius: 12px; border: none; font-weight: bold; width: 100%;">🔒 5 दिन बाद खुलेगा</button>
+                
+                <div id="mega-action-area" style="display: none;">
+                    <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20Mega%20Task" class="action-btn" target="_blank" style="background: white; color: #0f5132;">1. Get Task on WhatsApp</a>
+                    <input type="text" id="key-mega" class="key-input" placeholder="Enter Secret Code">
+                    <button onclick="verifyKey('mega', 400)" class="action-btn">2. Verify & Claim Coins</button>
+                </div>
+                <div id="mega-completed" class="completed-msg">✅ Task Completed</div>
             </div>
         </div>
 
@@ -192,11 +177,9 @@
                 <h3>🎡 Spin & Win</h3>
                 <p>डेली 10 स्पिन करें और कॉइन्स जीतें!</p>
                 <p id="spins-left-text" style="color: #b6ff40; font-weight: bold;">Spins Left Today: 10</p>
-                
                 <div class="wheel-wrapper">
                     <div class="pointer"></div>
                     <div class="wheel" id="spinWheel">
-                        <!-- Updated HTML logic: Text is mapped perfectly to each slice -->
                         <div class="slice-text st1">5<br><span style="font-size:10px;">Coins</span></div>
                         <div class="slice-text st2">Try<br>Again</div>
                         <div class="slice-text st3">10<br><span style="font-size:10px;">Coins</span></div>
@@ -225,7 +208,6 @@
             <div class="card">
                 <h3>Withdraw Funds</h3>
                 <p>विड्रॉल रिक्वेस्ट लगायें। रिक्वेस्ट लगने के बाद 7 दिन पेंडिंग रहेगा।</p>
-                
                 <div style="text-align: left; margin-bottom: 15px;">
                     <label>Select Amount (Coins = ₹):</label>
                     <select id="withdraw-amount" style="color: #333;">
@@ -237,9 +219,7 @@
                         <option value="1000">🪙 1000 Coins = ₹900</option>
                     </select>
                 </div>
-                
                 <button onclick="openWithdrawModal()" class="action-btn">Request Withdraw</button>
-
                 <div id="pending-status" class="pending-box">
                     <h4>⏳ Pending 7 Days</h4>
                     <p>Amount: <span id="p-amount"></span> Coins</p>
@@ -269,24 +249,44 @@
 </div>
 
 <script>
-    // --- Tabs Switch Logic (यही फंक्शन मिसिंग था) ---
+    // --- 250 SECRET VALID KEYS ---
+    const VALID_KEYS = [
+        "QW8X2", "B9M1P", "K4V7N", "L2C5Z", "X6J8R", "Y3H9T", "F5D4M", "P1G7W", "V8K2B", "N9X4C",
+        "J7L1Z", "M5Q3R", "T2H6W", "C8V9P", "R4B5N", "Z1K7X", "G6J2M", "D9F3T", "W4L8C", "H2P5V",
+        "B7N1X", "M3V6Q", "K9Z4R", "L5J8T", "X2C7P", "Y1G4W", "F8H2M", "P6D9B", "V3K5N", "N7Q1Z",
+        "J4M8R", "T9L2W", "C5V6P", "R1B3N", "Z8K4X", "G2J7M", "D6F9T", "W3H5C", "H7P1V", "B4N8X",
+        "M9V2Q", "K5Z6R", "L1J3T", "X8C9P", "Y4G7W", "F2H5M", "P7D1B", "V9K4N", "N3Q8Z", "J6M1R",
+        "T5L9W", "C2V4P", "R8B7N", "Z3K1X", "G9J5M", "D4F6T", "W1H8C", "H5P2V", "B9N4X", "M1V7Q",
+        "K6Z3R", "L8J9T", "X4C2P", "Y7G5W", "F1H6M", "P3D8B", "V5K9N", "N2Q4Z", "J9M5R", "T1L7W",
+        "C6V2P", "R3B9N", "Z5K8X", "G7J1M", "D2F4T", "W8H6C", "H4P9V", "B1N5X", "M6V3Q", "K2Z7R",
+        "L9J4T", "X5C8P", "Y2G1W", "F7H9M", "P4D2B", "V1K6N", "N8Q5Z", "J3M9R", "T6L4W", "C9V1P",
+        "R2B6N", "Z7K3X", "G4J8M", "D1F5T", "W5H2C", "H9P7V", "B6N2X", "M8V5Q", "K3Z1R", "L4J7T",
+        "X9C6P", "Y5G8W", "F2H1M", "P8D4B", "V6K3N", "N1Q9Z", "J5M2R", "T4L6W", "C7V8P", "R9B1N",
+        "Z2K5X", "G8J3M", "D5F7T", "W9H1C", "H3P4V", "B2N9X", "M4V8Q", "K1Z5R", "L7J2T", "X3C4P",
+        "Y8G6W", "F9H3M", "P2D7B", "V4K1N", "N6Q2Z", "J1M7R", "T8L3W", "C4V5P", "R5B2N", "Z9K6X",
+        "G3J9M", "D7F1T", "W2H4C", "H1P8V", "B5N6X", "M2V9Q", "K8Z4R", "L6J1T", "X7C3P", "Y9G2W",
+        "F4H8M", "P5D6B", "V2K7N", "N4Q3Z", "J8M4R", "T3L1W", "C1V9P", "R7B5N", "Z4K2X", "G1J6M",
+        "D8F3T", "W6H7C", "H5P1V", "B3N8X", "M7V4Q", "K5Z9R", "L2J6T", "X1C5P", "Y6G3W", "F3H7M",
+        "P9D1B", "V7K8N", "N5Q2Z", "J2M9R", "T7L5W", "C8V4P", "R6B1N", "Z1K9X", "G5J2M", "D9F6T",
+        "W4H3C", "H2P7V", "B8N1X", "M1V5Q", "K9Z2R", "L4J8T", "X6C7P", "Y3G9W", "F8H4M", "P1D2B",
+        "V5K6N", "N9Q7Z", "J4M3R", "T2L8W", "C5V1P", "R3B9N", "Z7K4X", "G8J5M", "D1F2T", "W9H6C",
+        "H7P3V", "B4N5X", "M6V1Q", "K2Z8R", "L9J7T", "X5C3P", "Y1G4W", "F7H8M", "P2D9B", "V3K1N",
+        "N8Q5Z", "J5M2R", "T6L9W", "C3V7P", "R1B4N", "Z9K6X", "G2J8M", "D4F1T", "W5H7C", "H8P2V",
+        "B1N6X", "M9V3Q", "K7Z5R", "L3J1T", "X8C4P", "Y2G6W", "F5H9M", "P4D8B", "V1K2N", "N7Q3Z",
+        "J9M4R", "T1L5W", "C6V2P", "R8B9N", "Z4K7X", "G3J1M", "D7F5T", "W2H8C", "H6P9V", "B5N2X",
+        "M3V8Q", "K1Z6R", "L8J4T", "X9C1P", "Y5G7W", "F6H2M", "P9D3B", "V4K5N", "N2Q8Z", "J7M1R"
+    ];
+
     function switchTab(tabId, element) {
-        // सारे टैब्स को हाईड (hide) करो
         let tabs = document.querySelectorAll('.tab-content');
         tabs.forEach(tab => tab.classList.remove('active'));
-        
-        // सारे नेविगेशन बटन्स से 'active' क्लास हटाओ
         let navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => item.classList.remove('active'));
         
-        // जिस टैब पर क्लिक किया है, उसे दिखाओ
         document.getElementById(tabId + '-section').classList.add('active');
-        
-        // जिस बटन पर क्लिक किया है, उसे 'active' बनाओ (ताकि हरा रंग आ जाये)
         element.classList.add('active');
     }
 
-    // --- Utils & Alerts ---
     function showCustomAlert(title, message) {
         document.getElementById("custom-alert-title").innerText = title;
         document.getElementById("custom-alert-message").innerHTML = message.replace(/\n/g, '<br>');
@@ -297,7 +297,6 @@
         document.getElementById("custom-alert-modal").style.display = "none";
     }
 
-    // --- Init App ---
     window.onload = function() {
         document.getElementById("main-app").style.display = "flex"; 
         initAppLogic(); 
@@ -319,20 +318,68 @@
         }
         checkReferralTimer();
         check5DayLock();
+        checkCompletedTasks();
     }
 
     document.getElementById("claim-btn").addEventListener("click", function() {
         localStorage.setItem("hasClaimedBonus", "true");
         let currentCoins = parseInt(localStorage.getItem("userCoins")) || 0;
-        localStorage.setItem("userCoins", currentCoins + 10); // Changed from 50 to 10
+        localStorage.setItem("userCoins", currentCoins + 10);
         updateWalletUI();
         document.getElementById("bonus-modal").style.display = "none";
     });
 
-    // --- Task Logic ---
-    function trackTask(taskType) {
-        let count = parseInt(localStorage.getItem(taskType + 'TaskCount')) || 0;
-        localStorage.setItem(taskType + 'TaskCount', count + 1);
+    // --- KEY VERIFICATION LOGIC ---
+    function verifyKey(taskName, rewardAmount) {
+        let keyInput = document.getElementById(`key-${taskName}`).value.trim();
+        
+        if (!keyInput) {
+            showCustomAlert("Error", "कृपया अपना Secret Code डालें!");
+            return;
+        }
+
+        if (localStorage.getItem(`${taskName}_completed`) === "true") {
+            showCustomAlert("Alert", "आप यह टास्क पहले ही पूरा कर चुके हैं!");
+            return;
+        }
+
+        if (!VALID_KEYS.includes(keyInput)) {
+            showCustomAlert("❌ Invalid Key", "आपने गलत कोड डाला है। कृपया एडमिन से मिला सही कोड डालें!");
+            return;
+        }
+
+        let usedKeys = JSON.parse(localStorage.getItem("used_keys") || "[]");
+        if (usedKeys.includes(keyInput)) {
+            showCustomAlert("⚠️ Used Key", "यह कोड आप पहले ही इस्तेमाल कर चुके हैं!");
+            return;
+        }
+
+        // Success - Code is Valid
+        usedKeys.push(keyInput);
+        localStorage.setItem("used_keys", JSON.stringify(usedKeys));
+        localStorage.setItem(`${taskName}_completed`, "true");
+        
+        // Ensure tasks count increases for withdrawal condition
+        let count = parseInt(localStorage.getItem(taskName + 'TaskCount')) || 0;
+        localStorage.setItem(taskName + 'TaskCount', count + 1);
+
+        let currentCoins = parseInt(localStorage.getItem("userCoins")) || 0;
+        localStorage.setItem("userCoins", currentCoins + rewardAmount);
+        updateWalletUI();
+
+        showCustomAlert("🎉 Success!", `कोड सही है! ${rewardAmount} Coins आपके वॉलेट में जुड़ गए हैं।`);
+        checkCompletedTasks();
+    }
+
+    function checkCompletedTasks() {
+        ['daily', 'premium1', 'premium2', 'mega'].forEach(task => {
+            if (localStorage.getItem(`${task}_completed`) === "true") {
+                let actionArea = document.getElementById(`${task}-action-area`);
+                let completedMsg = document.getElementById(`${task}-completed`);
+                if(actionArea) actionArea.style.display = "none";
+                if(completedMsg) completedMsg.style.display = "block";
+            }
+        });
     }
 
     function check5DayLock() {
@@ -344,14 +391,17 @@
         let daysPassed = Math.floor((new Date().getTime() - startDate) / (1000 * 60 * 60 * 24));
 
         if (daysPassed >= 5) {
-            ['t2', 't3', 't4'].forEach(id => {
-                document.getElementById("btn-" + id).style.display = "none"; 
-                document.getElementById("link-" + id).style.display = "block"; 
-                document.getElementById("card-" + id).style.opacity = "1"; 
+            ['premium1', 'premium2', 'mega'].forEach(task => {
+                document.getElementById(`btn-${task}-lock`).style.display = "none"; 
+                // Only show action area if task is NOT completed
+                if (localStorage.getItem(`${task}_completed`) !== "true") {
+                    document.getElementById(`${task}-action-area`).style.display = "block"; 
+                }
+                document.getElementById(`card-${task}`).style.opacity = "1"; 
             });
-            document.getElementById("card-t2").querySelector("h3").innerText = "📝 Premium Task 1";
-            document.getElementById("card-t3").querySelector("h3").innerText = "📝 Premium Task 2";
-            document.getElementById("card-t4").querySelector("h3").innerText = "📝 Mega Task";
+            document.getElementById("card-premium1").querySelector("h3").innerText = "📝 Premium Task 1";
+            document.getElementById("card-premium2").querySelector("h3").innerText = "📝 Premium Task 2";
+            document.getElementById("card-mega").querySelector("h3").innerText = "📝 Mega Task";
         }
     }
 
@@ -390,27 +440,24 @@
 
             if (hoursPassed >= 48) {
                 let coins = parseInt(localStorage.getItem("userCoins")) || 0;
-                localStorage.setItem("userCoins", coins + 200);
+                localStorage.setItem("userCoins", coins + 50); // Changed 200 to 50
                 localStorage.setItem("referPending", "completed");
                 updateWalletUI();
                 statusEl.style.display = "block";
-                statusEl.innerText = "✅ रेफरल रिवॉर्ड (200 Coins) जुड़ गए हैं!";
-                showCustomAlert("🎉 बधाई हो!", "आपके रेफरल के 48 घंटे पूरे हो गए हैं। आपके वॉलेट में 200 Coins जोड़ दिए गए हैं!");
+                statusEl.innerText = "✅ रेफरल रिवॉर्ड (50 Coins) जुड़ गए हैं!";
+                showCustomAlert("🎉 बधाई हो!", "आपके रेफरल के 48 घंटे पूरे हो गए हैं। आपके वॉलेट में 50 Coins जोड़ दिए गए हैं!");
             } else {
                 statusEl.style.display = "block";
                 statusEl.innerText = "⏳ 48 घंटे का टाइमर चल रहा है...";
             }
         } else if (isPending === "completed") {
             statusEl.style.display = "block";
-            statusEl.innerText = "✅ रेफरल रिवॉर्ड (200 Coins) जुड़ गए हैं!";
+            statusEl.innerText = "✅ रेफरल रिवॉर्ड (50 Coins) जुड़ गए हैं!";
         }
     }
 
-    // --- Spin Wheel Logic with Rigged Gamification & Perfect Rotation ---
+    // --- Spin Wheel Logic ---
     let currentRotation = 0;
-    
-    // Index Mapping (0 to 7): 
-    // 0: 5,  1: Try Again,  2: 10,  3: 200,  4: 50,  5: Try Again,  6: 300,  7: 400
     const slices = [5, 0, 10, 200, 50, 0, 300, 400]; 
 
     function updateSpinUI() {
@@ -418,7 +465,7 @@
         let spinDate = localStorage.getItem("spinDate");
         if(spinDate !== today) {
             localStorage.setItem("spinDate", today);
-            localStorage.setItem("spinsLeft", "10"); // Daily 10 spins
+            localStorage.setItem("spinsLeft", "10"); 
         }
         let left = parseInt(localStorage.getItem("spinsLeft")) || 0;
         document.getElementById("spins-left-text").innerText = "Spins Left Today: " + left;
@@ -443,28 +490,22 @@
         localStorage.setItem("totalSpinsLifetime", totalSpins);
 
         let randomSlice;
-
-        // Gamification Logic (Rigged Selection - 99% Small, 1% Big after 700)
         if (totalSpins < 700) {
-            // Safe indices only: 0 (5), 1 (Try), 2 (10), 4 (50), 5 (Try)
             const safeIndices = [0, 1, 2, 4, 5];
             randomSlice = safeIndices[Math.floor(Math.random() * safeIndices.length)];
         } else {
             let rng = Math.random(); 
             if (rng < 0.01) {
-                // 1% Big Prize (200, 300, 400)
                 const bigIndices = [3, 6, 7];
                 randomSlice = bigIndices[Math.floor(Math.random() * bigIndices.length)];
             } else {
-                // 99% Small/Zero
                 const safeIndices = [0, 1, 2, 4, 5];
                 randomSlice = safeIndices[Math.floor(Math.random() * safeIndices.length)];
             }
         }
 
-        // Perfect Math for pointing the specific slice to the top needle!
-        let extraSpins = 5 * 360; // 5 full rounds of spinning
-        let targetAngle = 360 - (22.5 + randomSlice * 45); // Where the chosen text aligns with the pointer
+        let extraSpins = 5 * 360; 
+        let targetAngle = 360 - (22.5 + randomSlice * 45); 
         let remainder = currentRotation % 360;
         let angleToAdd = targetAngle - remainder;
         
@@ -475,7 +516,6 @@
         let wheel = document.getElementById("spinWheel");
         wheel.style.transform = `rotate(${currentRotation}deg)`;
 
-        // Show result after animation (4s)
         setTimeout(() => {
             btn.disabled = false;
             let prize = slices[randomSlice];
@@ -496,12 +536,17 @@
         let requiredCoins = parseInt(amountSelect.value); 
         let currentCoins = parseInt(localStorage.getItem("userCoins")) || 0; 
 
-        let dailyCount = parseInt(localStorage.getItem('dailyTaskCount')) || 0;
-        let megaCount = parseInt(localStorage.getItem('megaTaskCount')) || 0;
-        let premiumCount = parseInt(localStorage.getItem('premiumTaskCount')) || 0;
+        // Update to match new task keys verification logic
+        let dailyCount = localStorage.getItem('daily_completed') === "true" ? 1 : 0;
+        let p1Count = localStorage.getItem('premium1_completed') === "true" ? 1 : 0;
+        let p2Count = localStorage.getItem('premium2_completed') === "true" ? 1 : 0;
+        let megaCount = localStorage.getItem('mega_completed') === "true" ? 1 : 0;
 
-        if (dailyCount < 2 || megaCount < 1 || premiumCount < 1) {
-            showCustomAlert("❌ Withdrawal Locked!", "विड्रॉल करने के लिए 2 'Daily Task', 1 'Mega Task' और 1 'Premium Task' पूरा करना ज़रूरी है।");
+        // Check if AT LEAST Daily 1, Premium 1 (or 2), and Mega are completed
+        let premiumCount = p1Count + p2Count;
+
+        if (dailyCount < 1 || megaCount < 1 || premiumCount < 1) {
+            showCustomAlert("❌ Withdrawal Locked!", "विड्रॉल करने के लिए 'Daily Task', 1 'Mega Task' और 1 'Premium Task' का कोड डालकर पूरा करना ज़रूरी है।");
             return; 
         }
 
