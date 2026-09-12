@@ -78,6 +78,14 @@
 </head>
 <body>
 
+<!-- NAYA FEATURE: SERVER DOWN SCREEN -->
+<div id="server-down-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8fafc; z-index: 99999; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px;">
+    <h1 style="color: #dc2626; font-size: 32px; margin-bottom: 15px; font-weight: 800;">⚠️ Server Down</h1>
+    <p style="color: #1e293b; font-size: 18px; font-weight: bold; line-height: 1.5;">यह एप्लिकेशन केवल शाम 4:00 बजे से शाम 6:00 बजे तक ही खुला रहता है।</p>
+    <p style="color: #475569; font-size: 15px; margin-top: 15px;">कृपया निर्धारित समय पर वापस आएं।</p>
+</div>
+<!-- SERVER DOWN SCREEN END -->
+
 <div id="bonus-modal" class="modal-overlay">
     <div class="modal-content">
         <h2 style="font-size: 24px; color: #0f5132;">🎉 Congratulations! 🎉</h2>
@@ -112,7 +120,7 @@
     </div>
 </div>
 
-<div class="app-frame" id="main-app">
+<div class="app-frame" id="main-app" style="display: none;">
     <div class="header">
         <h2>Cash Magnet</h2>
         <!-- 3 Line Menu (Hamburger) -->
@@ -340,10 +348,37 @@ function googleTranslateElementInit() {
         document.getElementById("custom-alert-modal").style.display = "none";
     }
 
+    // --- NAYA FEATURE: TIME CHECK LOGIC ---
+    function checkAppTimeLimit() {
+        let now = new Date();
+        let currentHour = now.getHours(); // 24-hour format (0 से 23)
+        
+        // चेक: क्या समय शाम 4 बजे (16) से शाम 6 बजे (18) के बीच है?
+        if (currentHour >= 16 && currentHour < 18) {
+            document.getElementById("server-down-screen").style.display = "none";
+            document.getElementById("main-app").style.display = "flex";
+        } else {
+            document.getElementById("server-down-screen").style.display = "flex";
+            document.getElementById("main-app").style.display = "none";
+            
+            // अगर कोई पॉपअप खुला हो तो उसे भी छिपा दो
+            document.getElementById("bonus-modal").style.display = "none";
+            document.getElementById("custom-alert-modal").style.display = "none";
+            document.getElementById("withdraw-modal").style.display = "none";
+        }
+    }
+
     window.onload = function() {
-        document.getElementById("main-app").style.display = "flex"; 
+        // सबसे पहले समय चेक करो
+        checkAppTimeLimit();
+        
+        // हर 1 मिनट में समय चेक करते रहो ताकि 6 बजते ही ऐप बंद हो जाए
+        setInterval(checkAppTimeLimit, 60000);
+        
+        // बाकी आपका पुराना कोड
         initAppLogic(); 
     };
+    // ----------------------------------------
 
     function वॉलेट_अपडेट_करें() { 
         let walletCoins = parseInt(localStorage.getItem("userCoins")) || 0;
@@ -393,7 +428,8 @@ function googleTranslateElementInit() {
         updateSpinUI();
         checkPendingWithdrawal();
 
-        if (!hasClaimed) {
+        // Bonus modal tabhi dikhao jab server down na ho (time check)
+        if (!hasClaimed && document.getElementById("server-down-screen").style.display === "none") {
             document.getElementById("bonus-modal").style.display = "flex";
         }
         checkReferralTimer();
@@ -616,7 +652,7 @@ function googleTranslateElementInit() {
                 इतिहास_जोड़ें(prize, 'Spin & Win Reward', 'स्पिन और जीत इनाम');
                 showCustomAlert("🎉 You Won!", `बधाई हो! आपको ${prize} Coins मिले हैं।`);
             } else {
-                showCustomAlert("Oops!", "Try Again! कोई बात অব্যাহত रखें, अगली बार बेहतर किस्मत।");
+                showCustomAlert("Oops!", "Try Again! कोई बात नहीं, अगली बार बेहतर किस्मत।");
             }
         }, 4000);
     }
