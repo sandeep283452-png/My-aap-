@@ -330,13 +330,12 @@ function googleTranslateElementInit() {
         initAppLogic(); 
     };
 
-    function वॉलेट_अपडेट_करें() { // Hindi variable function
+    function वॉलेट_अपडेट_करें() { 
         let walletCoins = parseInt(localStorage.getItem("userCoins")) || 0;
         document.getElementById("wallet-balance").innerText = "🪙 " + walletCoins;
     }
 
     // --- इतिहास (HISTORY) DATABASE LOGIC ---
-    // यह फंक्शन लोकल स्टोरेज में कॉइन का रिकॉर्ड सेव करता है
     function इतिहास_जोड़ें(रकम, स्रोत_en, स्रोत_hi) {
         let currentCoins = parseInt(localStorage.getItem("userCoins")) || 0;
         localStorage.setItem("userCoins", currentCoins + रकम);
@@ -344,7 +343,6 @@ function googleTranslateElementInit() {
         let history = JSON.parse(localStorage.getItem("coinHistory") || "[]");
         let date = new Date().toLocaleString();
         
-        // Save to Database Array
         history.unshift({ amount: रकम, sourceEn: स्रोत_en, sourceHi: स्रोत_hi, date: date });
         localStorage.setItem("coinHistory", JSON.stringify(history));
         
@@ -377,7 +375,7 @@ function googleTranslateElementInit() {
     function initAppLogic() {
         let hasClaimed = localStorage.getItem("hasClaimedBonus");
         वॉलेट_अपडेट_करें();
-        इतिहास_दिखाएं(); // Load History on app open
+        इतिहास_दिखाएं(); 
         updateSpinUI();
         checkPendingWithdrawal();
 
@@ -392,31 +390,40 @@ function googleTranslateElementInit() {
     // BONUS CLAIM UPDATE
     document.getElementById("claim-btn").addEventListener("click", function() {
         localStorage.setItem("hasClaimedBonus", "true");
-        इतिहास_जोड़ें(10, 'Signup Bonus', 'साइनअप बोनस'); // Saves in History
+        इतिहास_जोड़ें(10, 'Signup Bonus', 'साइनअप बोनस'); 
         document.getElementById("bonus-modal").style.display = "none";
     });
 
-    // --- KEY VERIFICATION LOGIC ---
+    // --- KEY VERIFICATION LOGIC (FIXED & SECURED) ---
     function verifyKey(taskName, rewardAmount, taskEn, taskHi) {
         let keyInput = document.getElementById(`key-${taskName}`).value.trim();
         
+        // 1. चेक करो कि कोड डाला है या नहीं (खाली डब्बा)
         if (!keyInput) {
             showCustomAlert("Error", "कृपया अपना Secret Code डालें!");
             return;
         }
 
+        // 2. चेक करो कि क्या कोड उन असली कोड्स (VALID_KEYS) में से एक है?
+        if (!VALID_KEYS.includes(keyInput)) {
+            showCustomAlert("❌ Invalid Key", "यह कोड गलत है! कृपया सही Secret Code डालें।");
+            return;
+        }
+
+        // 3. चेक करो कि टास्क पहले ही तो पूरा नहीं हुआ
         if (localStorage.getItem(`${taskName}_completed`) === "true") {
             showCustomAlert("Alert", "आप यह टास्क पहले ही पूरा कर चुके हैं!");
             return;
         }
 
+        // 4. चेक करो कि क्या कोड पहले ही इस्तेमाल हो चुका है
         let usedKeys = JSON.parse(localStorage.getItem("used_keys") || "[]");
         if (usedKeys.includes(keyInput)) {
             showCustomAlert("⚠️ Used Key", "यह कोड आप पहले ही इस्तेमाल कर चुके हैं!");
             return;
         }
 
-        // Success - Code is Valid
+        // Success - अब सब कुछ सही है, कोड असली है और नया है!
         usedKeys.push(keyInput);
         localStorage.setItem("used_keys", JSON.stringify(usedKeys));
         localStorage.setItem(`${taskName}_completed`, "true");
@@ -424,7 +431,7 @@ function googleTranslateElementInit() {
         let count = parseInt(localStorage.getItem(taskName + 'TaskCount')) || 0;
         localStorage.setItem(taskName + 'TaskCount', count + 1);
 
-        // Update Wallet & History via new function
+        // Update Wallet & History
         इतिहास_जोड़ें(rewardAmount, taskEn + ' Reward', taskHi + ' इनाम');
 
         showCustomAlert("🎉 Success!", `कोड सही है! ${rewardAmount} Coins आपके वॉलेट में जुड़ गए हैं।`);
@@ -484,7 +491,7 @@ function googleTranslateElementInit() {
             let hoursPassed = (new Date().getTime() - startTime) / (1000 * 60 * 60);
 
             if (hoursPassed >= 48) {
-                इतिहास_जोड़ें(50, 'Referral Reward', 'रेफरल इनाम'); // Save in history
+                इतिहास_जोड़ें(50, 'Referral Reward', 'रेफरल इनाम'); 
                 localStorage.setItem("referPending", "completed");
                 
                 statusEl.style.display = "block";
@@ -503,18 +510,16 @@ function googleTranslateElementInit() {
     // --- Spin Wheel Logic (Updated with 800-spin Jackpot Logic) ---
     let currentRotation = 0;
     const slices = [5, 0, 10, 200, 50, 0, 300, 400]; 
-    // इंडेक्स (Index): 0=5, 1=TryAgain, 2=10, 3=200, 4=50, 5=TryAgain, 6=300, 7=400
-
+    
     function updateSpinUI() {
         let today = new Date().toLocaleDateString();
         let spinDate = localStorage.getItem("spinDate");
         
-        // अगर नया दिन है तो स्पिन और विन/लॉस का डेटा रीसेट करें
         if(spinDate !== today) {
             localStorage.setItem("spinDate", today);
-            localStorage.setItem("spinsLeft", "5"); // डेली 5 स्पिन
-            localStorage.setItem("todayWins", "0"); // आज कितनी बार कॉइन जीते (Max 3)
-            localStorage.setItem("todayFails", "0"); // आज कितनी बार Try Again आया (Max 2)
+            localStorage.setItem("spinsLeft", "5"); 
+            localStorage.setItem("todayWins", "0"); 
+            localStorage.setItem("todayFails", "0"); 
         }
         let left = parseInt(localStorage.getItem("spinsLeft")) || 0;
         document.getElementById("spins-left-text").innerText = "Spins Left Today: " + left;
@@ -530,48 +535,37 @@ function googleTranslateElementInit() {
         let btn = document.getElementById("spinBtn");
         btn.disabled = true;
 
-        // स्पिन कम करें
         left--;
         localStorage.setItem("spinsLeft", left);
-        updateSpinUI(); // UI अपडेट करें
+        updateSpinUI(); 
 
-        // लाइफटाइम स्पिन काउंट करें
         let totalSpins = parseInt(localStorage.getItem("totalSpinsLifetime")) || 0;
         totalSpins++;
         localStorage.setItem("totalSpinsLifetime", totalSpins);
 
-        // आज के विन और लॉस का डेटा लें
         let todayWins = parseInt(localStorage.getItem("todayWins")) || 0;
         let todayFails = parseInt(localStorage.getItem("todayFails")) || 0;
 
         let randomSlice;
-
-        // --- 1% जैकपॉट लॉजिक (800 स्पिन के बाद) ---
         let isJackpot = false;
         if (totalSpins >= 800) {
-            // 800 स्पिन के बाद सिर्फ 1% (0.01) चांस है बड़े कॉइन मिलने का
             if (Math.random() < 0.01) { 
                 isJackpot = true;
             }
         }
 
         if (isJackpot) {
-            // जैकपॉट लगा! 50, 200, 300, या 400 कॉइन में से कुछ मिलेगा
             const bigIndices = [3, 4, 6, 7]; 
             randomSlice = bigIndices[Math.floor(Math.random() * bigIndices.length)];
-            todayWins++; // इसे भी जीत में गिनेंगे
+            todayWins++; 
         } 
         else {
-            // --- नार्मल लॉजिक (3 बार 5/10 कॉइन और 2 बार Try Again) ---
-            
             let forceWin = false;
             let forceFail = false;
 
-            // अगर आज के 2 'Try Again' पूरे हो चुके हैं, तो जबरदस्ती जिताओ
             if (todayFails >= 2) {
                 forceWin = true;
             }
-            // अगर आज की 3 जीत पूरी हो चुकी हैं, तो जबरदस्ती 'Try Again' लाओ
             else if (todayWins >= 3) {
                 forceFail = true;
             }
@@ -582,28 +576,23 @@ function googleTranslateElementInit() {
             } else if (forceFail) {
                 chooseWin = false;
             } else {
-                // अगर दोनों में लिमिट बची है, तो रैंडम तय करो (60% चांस जीतने का)
                 chooseWin = Math.random() < 0.6; 
             }
 
             if (chooseWin) {
-                // जीतने वाले स्लाइस (सिर्फ 5 और 10 कॉइन)
                 const winIndices = [0, 2]; 
                 randomSlice = winIndices[Math.floor(Math.random() * winIndices.length)];
                 todayWins++;
             } else {
-                // हारने वाले स्लाइस (Try Again)
                 const failIndices = [1, 5]; 
                 randomSlice = failIndices[Math.floor(Math.random() * failIndices.length)];
                 todayFails++;
             }
         }
 
-        // नया डेटा सेव करें
         localStorage.setItem("todayWins", todayWins);
         localStorage.setItem("todayFails", todayFails);
 
-        // व्हील घुमाने का एनिमेशन
         let extraSpins = 5 * 360; 
         let targetAngle = 360 - (22.5 + randomSlice * 45); 
         let remainder = currentRotation % 360;
@@ -615,12 +604,10 @@ function googleTranslateElementInit() {
         let wheel = document.getElementById("spinWheel");
         wheel.style.transform = `rotate(${currentRotation}deg)`;
 
-        // 4 सेकंड बाद रिजल्ट दिखाएं
         setTimeout(() => {
             btn.disabled = false;
             let prize = slices[randomSlice];
             if(prize > 0) {
-                // डेटाबेस/हिस्ट्री में जोड़ें
                 इतिहास_जोड़ें(prize, 'Spin & Win Reward', 'स्पिन और जीत इनाम');
                 showCustomAlert("🎉 You Won!", `बधाई हो! आपको ${prize} Coins मिले हैं।`);
             } else {
