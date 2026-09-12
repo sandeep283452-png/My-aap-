@@ -97,12 +97,6 @@
 </head>
 <body>
 
-<div id="server-down-msg">
-    <h1 style="font-size: 50px; margin-bottom: 20px;">🚫</h1>
-    <h2 style="color: #dc3545; margin-bottom: 10px;">सर्वर बंद है</h2>
-    <p style="color: #555; font-size: 16px; line-height: 1.5;">यह ऐप केवल <strong>शाम 4:00 बजे से 6:00 बजे</strong> तक ही चालू रहता है।<br><br>कृपया सही समय पर वापस आएं!</p>
-</div>
-
 <!-- Bonus Modal -->
 <div id="bonus-modal" class="modal-overlay">
     <div class="modal-content">
@@ -285,16 +279,10 @@
         document.getElementById("custom-alert-modal").style.display = "none";
     }
 
-    // --- Init App ---
+    // --- Init App --- (Time limit removed here)
     window.onload = function() {
-        var currentHour = new Date().getHours(); 
-        // 16 to 18 is 4 PM to 6 PM
-        if (currentHour >= 16 && currentHour < 18) {
-            document.getElementById("main-app").style.display = "flex"; 
-            initAppLogic(); 
-        } else {
-            document.getElementById("server-down-msg").style.display = "flex"; 
-        }
+        document.getElementById("main-app").style.display = "flex"; 
+        initAppLogic(); 
     };
 
     function updateWalletUI() {
@@ -522,8 +510,6 @@
         localStorage.setItem("w_method", method);
         localStorage.setItem("w_details", details);
         localStorage.setItem("w_date", today);
-
-        // Google Sheet part removed as requested.
 
         closeWithdrawModal();
         checkPendingWithdrawal();
