@@ -71,26 +71,17 @@
         .pending-box h4 { color: #ffb300; margin-bottom: 5px; }
         .pending-box p { color: white; font-size: 13px; margin: 0; }
         
-        /* Hide google translate top bar to make UI clean */
         .goog-te-banner-frame { display: none !important; }
         body { top: 0px !important; }
     </style>
 </head>
 <body>
 
-<!-- NAYA FEATURE: SERVER DOWN SCREEN -->
-<div id="server-down-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8fafc; z-index: 99999; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px;">
-    <h1 style="color: #dc2626; font-size: 32px; margin-bottom: 15px; font-weight: 800;">⚠️ Server Down</h1>
-    <p style="color: #1e293b; font-size: 18px; font-weight: bold; line-height: 1.5;">यह एप्लिकेशन केवल शाम 4:00 बजे से शाम 6:00 बजे तक ही खुला रहता है।</p>
-    <p style="color: #475569; font-size: 15px; margin-top: 15px;">कृपया निर्धारित समय पर वापस आएं।</p>
-</div>
-<!-- SERVER DOWN SCREEN END -->
-
 <div id="bonus-modal" class="modal-overlay">
     <div class="modal-content">
         <h2 style="font-size: 24px; color: #0f5132;">🎉 Congratulations! 🎉</h2>
         <p style="color: #666; margin-top: 10px; font-size: 15px;">EarnApp में आपका स्वागत है! आपको मिलता है शानदार साइनअप बोनस।</p>
-        <div style="font-size: 35px; font-weight: bold; color: #166534; margin: 20px 0;">🪙 10 Coins</div>
+        <div style="font-size: 35px; font-weight: bold; color: #166534; margin: 20px 0;">₹ 10</div>
         <button id="claim-btn" class="action-btn">🎁 Claim Now</button>
     </div>
 </div>
@@ -120,21 +111,18 @@
     </div>
 </div>
 
-<div class="app-frame" id="main-app" style="display: none;">
+<div class="app-frame" id="main-app">
     <div class="header">
         <h2>Cash Magnet</h2>
-        <!-- 3 Line Menu (Hamburger) -->
         <div class="menu-icon" onclick="toggleLanguageMenu()">☰</div>
         
-        <!-- Language Selection Dropdown -->
         <div id="lang-menu" class="lang-dropdown">
             <h4>Select Language / भाषा चुनें:</h4>
-            <!-- Google Translate Widget Integration -->
             <div id="google_translate_element"></div>
         </div>
 
         <div class="notice-board">
-            <strong>Important Notice:</strong> To earn coins, create a new Gmail account. Send the new Gmail and password via WhatsApp, then remove it from your phone.
+            <strong>Important Notice:</strong> To earn rupees, create a new Gmail account. Send the new Gmail and password via WhatsApp, then remove it from your phone.
         </div>
     </div>
 
@@ -142,59 +130,65 @@
         
         <!-- TASKS SECTION -->
         <div id="tasks-section" class="tab-content">
-            <div class="card refer-card">
+            
+            <!-- REFER AND EARN MODIFIED SECTION -->
+            <div class="card refer-card" id="card-refer">
                 <h3>📢 Refer & Earn</h3>
-                <p>अपने दोस्तों को रेफर करें और 48 घंटे बाद पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 500 Coins</span></p>
-                <button onclick="startReferralTimer()" class="action-btn" style="background: white; color: #198754;">📲 Share on WhatsApp</button>
-                <p id="referral-status" style="font-size: 13px; font-weight: bold; color: #b6ff40; margin-top: 10px; display: none;">⏳ 48 घंटे का टाइमर चल रहा है...</p>
+                <p>अपने दोस्तों को रेफर करें और एडमिन से कोड लेकर पाएं <span style="font-weight: bold; color: #b6ff40;">₹ 500</span></p>
+                <div id="refer-action-area">
+                    <a href="https://wa.me/27736060982?text=Hello,%20I%20have%20completed%20a%20Referral.%20Please%20verify%20and%20send%20my%20Refer%20Code" class="action-btn" target="_blank" style="background: white; color: #198754;">1. Get Refer Code</a>
+                    <input type="text" id="key-refer" class="key-input" placeholder="Enter Refer Code">
+                    <button onclick="verifyKey('refer', 500, 'Refer & Earn', 'रेफर और अर्न')" class="action-btn">2. Verify & Claim ₹500</button>
+                </div>
+                <div id="refer-completed" class="completed-msg">✅ Referral Claimed</div>
             </div>
             
             <div class="card" id="card-daily">
                 <h3>📝 Daily Task 1</h3>
-                <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 100 Coins</span></p>
+                <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">₹ 100</span></p>
                 <div id="daily-action-area">
                     <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20my%20Daily%20Task%201" class="action-btn" target="_blank" style="background: white; color: #0f5132;">1. Get Task on WhatsApp</a>
                     <input type="text" id="key-daily" class="key-input" placeholder="Enter Secret Code">
-                    <button onclick="verifyKey('daily', 100, 'Daily Task 1', 'डेली टास्क 1')" class="action-btn">2. Verify & Claim Coins</button>
+                    <button onclick="verifyKey('daily', 100, 'Daily Task 1', 'डेली टास्क 1')" class="action-btn">2. Verify & Claim</button>
                 </div>
                 <div id="daily-completed" class="completed-msg">✅ Task Completed</div>
             </div>
             
             <div class="card" id="card-premium1" style="opacity: 0.7;">
                 <h3>🔒 Premium Task 1</h3>
-                <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 250 Coins</span></p>
+                <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">₹ 250</span></p>
                 <button id="btn-premium1-lock" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 20px; border-radius: 12px; border: none; font-weight: bold; width: 100%;">🔒 5 दिन बाद खुलेगा</button>
                 
                 <div id="premium1-action-area" style="display: none;">
                     <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20Premium%20Task%201" class="action-btn" target="_blank" style="background: white; color: #0f5132;">1. Get Task on WhatsApp</a>
                     <input type="text" id="key-premium1" class="key-input" placeholder="Enter Secret Code">
-                    <button onclick="verifyKey('premium1', 250, 'Premium Task 1', 'प्रीमियम टास्क 1')" class="action-btn">2. Verify & Claim Coins</button>
+                    <button onclick="verifyKey('premium1', 250, 'Premium Task 1', 'प्रीमियम टास्क 1')" class="action-btn">2. Verify & Claim</button>
                 </div>
                 <div id="premium1-completed" class="completed-msg">✅ Task Completed</div>
             </div>
 
             <div class="card" id="card-premium2" style="opacity: 0.7;">
                 <h3>🔒 Premium Task 2</h3>
-                <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 300 Coins</span></p>
+                <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">₹ 300</span></p>
                 <button id="btn-premium2-lock" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 20px; border-radius: 12px; border: none; font-weight: bold; width: 100%;">🔒 5 दिन बाद खुलेगा</button>
                 
                 <div id="premium2-action-area" style="display: none;">
                     <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20Premium%20Task%202" class="action-btn" target="_blank" style="background: white; color: #0f5132;">1. Get Task on WhatsApp</a>
                     <input type="text" id="key-premium2" class="key-input" placeholder="Enter Secret Code">
-                    <button onclick="verifyKey('premium2', 300, 'Premium Task 2', 'प्रीमियम टास्क 2')" class="action-btn">2. Verify & Claim Coins</button>
+                    <button onclick="verifyKey('premium2', 300, 'Premium Task 2', 'प्रीमियम टास्क 2')" class="action-btn">2. Verify & Claim</button>
                 </div>
                 <div id="premium2-completed" class="completed-msg">✅ Task Completed</div>
             </div>
 
             <div class="card" id="card-mega" style="opacity: 0.7;">
                 <h3>🔒 Mega Task</h3>
-                <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">🪙 400 Coins</span></p>
+                <p>यह टास्क पूरा करें और पाएं <span style="font-weight: bold; color: #b6ff40;">₹ 400</span></p>
                 <button id="btn-mega-lock" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 20px; border-radius: 12px; border: none; font-weight: bold; width: 100%;">🔒 5 दिन बाद खुलेगा</button>
                 
                 <div id="mega-action-area" style="display: none;">
                     <a href="https://wa.me/27736060982?text=Hello,%20I%20am%20ready%20for%20Mega%20Task" class="action-btn" target="_blank" style="background: white; color: #0f5132;">1. Get Task on WhatsApp</a>
                     <input type="text" id="key-mega" class="key-input" placeholder="Enter Secret Code">
-                    <button onclick="verifyKey('mega', 400, 'Mega Task', 'मेगा टास्क')" class="action-btn">2. Verify & Claim Coins</button>
+                    <button onclick="verifyKey('mega', 400, 'Mega Task', 'मेगा टास्क')" class="action-btn">2. Verify & Claim</button>
                 </div>
                 <div id="mega-completed" class="completed-msg">✅ Task Completed</div>
             </div>
@@ -204,19 +198,19 @@
         <div id="spin-section" class="tab-content">
             <div class="card">
                 <h3>🎡 Spin & Win</h3>
-                <p>डेली सिर्फ 5 स्पिन करें और कॉइन्स जीतें!</p>
+                <p>डेली सिर्फ 5 स्पिन करें और रुपये जीतें!</p>
                 <p id="spins-left-text" style="color: #b6ff40; font-weight: bold;">Spins Left Today: 5</p>
                 <div class="wheel-wrapper">
                     <div class="pointer"></div>
                     <div class="wheel" id="spinWheel">
-                        <div class="slice-text st1">5<br><span style="font-size:10px;">Coins</span></div>
+                        <div class="slice-text st1">5<br><span style="font-size:10px;">₹</span></div>
                         <div class="slice-text st2">Try<br>Again</div>
-                        <div class="slice-text st3">10<br><span style="font-size:10px;">Coins</span></div>
-                        <div class="slice-text st4">200<br><span style="font-size:10px;">Coins</span></div>
-                        <div class="slice-text st5">50<br><span style="font-size:10px;">Coins</span></div>
+                        <div class="slice-text st3">10<br><span style="font-size:10px;">₹</span></div>
+                        <div class="slice-text st4">200<br><span style="font-size:10px;">₹</span></div>
+                        <div class="slice-text st5">50<br><span style="font-size:10px;">₹</span></div>
                         <div class="slice-text st6">Try<br>Again</div>
-                        <div class="slice-text st7">300<br><span style="font-size:10px;">Coins</span></div>
-                        <div class="slice-text st8">400<br><span style="font-size:10px;">Coins</span></div>
+                        <div class="slice-text st7">300<br><span style="font-size:10px;">₹</span></div>
+                        <div class="slice-text st8">400<br><span style="font-size:10px;">₹</span></div>
                     </div>
                     <button class="spin-btn" onclick="spinTheWheel()" id="spinBtn">SPIN</button>
                 </div>
@@ -227,13 +221,12 @@
         <div id="wallet-section" class="tab-content active">
             <div class="card">
                 <h3>Cash Magnet Wallet</h3>
-                <div class="coin-balance" id="wallet-balance">🪙 0</div>
+                <div class="coin-balance" id="wallet-balance">₹ 0</div>
             </div>
             
             <div class="card" style="text-align: left; padding: 15px;">
                 <h3 style="text-align: center; margin-bottom: 15px;">📜 Transaction History</h3>
                 <div id="history-list" style="max-height: 250px; overflow-y: auto;">
-                    <!-- History Logs will appear here dynamically -->
                 </div>
             </div>
         </div>
@@ -242,22 +235,20 @@
         <div id="payment-section" class="tab-content">
             <div class="card">
                 <h3>Withdraw Funds</h3>
-                <p>विड्रॉल रिक्वेस्ट लगायें। रिक्वेस्ट लगने के बाद 7 दिन पेंडिंग रहेगा।</p>
+                <p>विड्रॉल रिक्वेस्ट लगायें। रिक्वेस्ट लगने के बाद 7 दिन पेंडिंग रहेगा। (न्यूनतम: ₹600)</p>
                 <div style="text-align: left; margin-bottom: 15px;">
-                    <label>Select Amount (Coins = ₹):</label>
+                    <label>Select Amount:</label>
                     <select id="withdraw-amount" style="color: #333;">
-                        <option value="100">🪙 100 Coins = ₹90</option>
-                        <option value="200">🪙 200 Coins = ₹180</option>
-                        <option value="300">🪙 300 Coins = ₹270</option>
-                        <option value="400">🪙 400 Coins = ₹360</option>
-                        <option value="500">🪙 500 Coins = ₹450</option>
-                        <option value="1000">🪙 1000 Coins = ₹900</option>
+                        <option value="600">₹ 600</option>
+                        <option value="1000">₹ 1000</option>
+                        <option value="2000">₹ 2000</option>
+                        <option value="3000">₹ 3000</option>
                     </select>
                 </div>
                 <button onclick="openWithdrawModal()" class="action-btn">Request Withdraw</button>
                 <div id="pending-status" class="pending-box">
                     <h4>⏳ Pending 7 Days</h4>
-                    <p>Amount: <span id="p-amount"></span> Coins</p>
+                    <p>Amount: ₹ <span id="p-amount"></span></p>
                     <p>Details: <span id="p-details"></span></p>
                     <p>Requested: <span id="p-date"></span></p>
                 </div>
@@ -348,41 +339,13 @@ function googleTranslateElementInit() {
         document.getElementById("custom-alert-modal").style.display = "none";
     }
 
-    // --- NAYA FEATURE: TIME CHECK LOGIC ---
-    function checkAppTimeLimit() {
-        let now = new Date();
-        let currentHour = now.getHours(); // 24-hour format (0 से 23)
-        
-        // चेक: क्या समय शाम 4 बजे (16) से शाम 6 बजे (18) के बीच है?
-        if (currentHour >= 16 && currentHour < 18) {
-            document.getElementById("server-down-screen").style.display = "none";
-            document.getElementById("main-app").style.display = "flex";
-        } else {
-            document.getElementById("server-down-screen").style.display = "flex";
-            document.getElementById("main-app").style.display = "none";
-            
-            // अगर कोई पॉपअप खुला हो तो उसे भी छिपा दो
-            document.getElementById("bonus-modal").style.display = "none";
-            document.getElementById("custom-alert-modal").style.display = "none";
-            document.getElementById("withdraw-modal").style.display = "none";
-        }
-    }
-
     window.onload = function() {
-        // सबसे पहले समय चेक करो
-        checkAppTimeLimit();
-        
-        // हर 1 मिनट में समय चेक करते रहो ताकि 6 बजते ही ऐप बंद हो जाए
-        setInterval(checkAppTimeLimit, 60000);
-        
-        // बाकी आपका पुराना कोड
         initAppLogic(); 
     };
-    // ----------------------------------------
 
     function वॉलेट_अपडेट_करें() { 
         let walletCoins = parseInt(localStorage.getItem("userCoins")) || 0;
-        document.getElementById("wallet-balance").innerText = "🪙 " + walletCoins;
+        document.getElementById("wallet-balance").innerText = "₹ " + walletCoins;
     }
 
     function इतिहास_जोड़ें(रकम, स्रोत_en, स्रोत_hi) {
@@ -405,7 +368,7 @@ function googleTranslateElementInit() {
         list.innerHTML = "";
         
         if (history.length === 0) {
-            list.innerHTML = `<p style="text-align:center; color:#d1e7dd;">अभी कोई कॉइन नहीं कमाए हैं / No history yet.</p>`;
+            list.innerHTML = `<p style="text-align:center; color:#d1e7dd;">अभी तक कोई कमाई नहीं / No history yet.</p>`;
             return;
         }
         
@@ -414,7 +377,7 @@ function googleTranslateElementInit() {
             <div style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.2);">
                 <div style="display:flex; justify-content:space-between; margin-bottom: 5px;">
                     <strong>${item.sourceEn}</strong>
-                    <span style="color: #b6ff40; font-weight:bold;">+${item.amount} 🪙</span>
+                    <span style="color: #b6ff40; font-weight:bold;">+ ₹${item.amount}</span>
                 </div>
                 <div style="font-size: 11px; color: #a3d2ba;">${item.date}</div>
             </div>`;
@@ -428,11 +391,10 @@ function googleTranslateElementInit() {
         updateSpinUI();
         checkPendingWithdrawal();
 
-        // Bonus modal tabhi dikhao jab server down na ho (time check)
-        if (!hasClaimed && document.getElementById("server-down-screen").style.display === "none") {
+        // Bonus modal condition simplified (time check removed)
+        if (!hasClaimed) {
             document.getElementById("bonus-modal").style.display = "flex";
         }
-        checkReferralTimer();
         check5DayLock();
         checkCompletedTasks();
     }
@@ -443,7 +405,6 @@ function googleTranslateElementInit() {
         document.getElementById("bonus-modal").style.display = "none";
     });
 
-    // --- KEY VERIFICATION LOGIC ---
     function verifyKey(taskName, rewardAmount, taskEn, taskHi) {
         let keyInput = document.getElementById(`key-${taskName}`).value.trim();
         
@@ -458,7 +419,7 @@ function googleTranslateElementInit() {
         }
 
         if (localStorage.getItem(`${taskName}_completed`) === "true") {
-            showCustomAlert("Alert", "आप यह टास्क पहले ही पूरा कर चुके हैं!");
+            showCustomAlert("Alert", "आप यह टास्क/रेफरल पहले ही पूरा कर चुके हैं!");
             return;
         }
 
@@ -477,12 +438,12 @@ function googleTranslateElementInit() {
 
         इतिहास_जोड़ें(rewardAmount, taskEn + ' Reward', taskHi + ' इनाम');
 
-        showCustomAlert("🎉 Success!", `कोड सही है! ${rewardAmount} Coins आपके वॉलेट में जुड़ गए हैं।`);
+        showCustomAlert("🎉 Success!", `कोड सही है! ₹${rewardAmount} आपके वॉलेट में जुड़ गए हैं।`);
         checkCompletedTasks();
     }
 
     function checkCompletedTasks() {
-        ['daily', 'premium1', 'premium2', 'mega'].forEach(task => {
+        ['refer', 'daily', 'premium1', 'premium2', 'mega'].forEach(task => {
             if (localStorage.getItem(`${task}_completed`) === "true") {
                 let actionArea = document.getElementById(`${task}-action-area`);
                 let completedMsg = document.getElementById(`${task}-completed`);
@@ -511,41 +472,6 @@ function googleTranslateElementInit() {
             document.getElementById("card-premium1").querySelector("h3").innerText = "📝 Premium Task 1";
             document.getElementById("card-premium2").querySelector("h3").innerText = "📝 Premium Task 2";
             document.getElementById("card-mega").querySelector("h3").innerText = "📝 Mega Task";
-        }
-    }
-
-    function startReferralTimer() {
-        let msg = "Download Cash Magnet App and earn! Click here: https://link.to.app";
-        let waLink = "https://wa.me/?text=" + encodeURIComponent(msg);
-        if (!localStorage.getItem("referPending")) {
-            localStorage.setItem("referStartTime", new Date().getTime()); 
-            localStorage.setItem("referPending", "true");
-        }
-        window.open(waLink, "_blank"); 
-        checkReferralTimer();
-    }
-
-    function checkReferralTimer() {
-        let isPending = localStorage.getItem("referPending");
-        let statusEl = document.getElementById("referral-status");
-        if (isPending === "true") {
-            let startTime = parseInt(localStorage.getItem("referStartTime"));
-            let hoursPassed = (new Date().getTime() - startTime) / (1000 * 60 * 60);
-
-            if (hoursPassed >= 48) {
-                इतिहास_जोड़ें(50, 'Referral Reward', 'रेफरल इनाम'); 
-                localStorage.setItem("referPending", "completed");
-                
-                statusEl.style.display = "block";
-                statusEl.innerText = "✅ रेफरल रिवॉर्ड (50 Coins) जुड़ गए हैं!";
-                showCustomAlert("🎉 बधाई हो!", "आपके रेफरल के 48 घंटे पूरे हो गए हैं। आपके वॉलेट में 50 Coins जोड़ दिए गए हैं!");
-            } else {
-                statusEl.style.display = "block";
-                statusEl.innerText = "⏳ 48 घंटे का टाइमर चल रहा है...";
-            }
-        } else if (isPending === "completed") {
-            statusEl.style.display = "block";
-            statusEl.innerText = "✅ रेफरल रिवॉर्ड (50 Coins) जुड़ गए हैं!";
         }
     }
 
@@ -650,7 +576,7 @@ function googleTranslateElementInit() {
             let prize = slices[randomSlice];
             if(prize > 0) {
                 इतिहास_जोड़ें(prize, 'Spin & Win Reward', 'स्पिन और जीत इनाम');
-                showCustomAlert("🎉 You Won!", `बधाई हो! आपको ${prize} Coins मिले हैं।`);
+                showCustomAlert("🎉 You Won!", `बधाई हो! आपको ₹${prize} मिले हैं।`);
             } else {
                 showCustomAlert("Oops!", "Try Again! कोई बात नहीं, अगली बार बेहतर किस्मत।");
             }
@@ -675,7 +601,7 @@ function googleTranslateElementInit() {
         }
 
         if (currentCoins < requiredCoins) {
-            showCustomAlert("❌ Not Enough Coins", `आपके पास पर्याप्त कॉइन नहीं हैं। विड्रॉल के लिए ${requiredCoins} कॉइन चाहिए।`);
+            showCustomAlert("❌ Not Enough Balance", `आपके पास पर्याप्त रुपये नहीं हैं। विड्रॉल के लिए कम से कम ₹${requiredCoins} चाहिए।`);
             return;
         }
 
